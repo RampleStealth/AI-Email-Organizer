@@ -1773,7 +1773,104 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
   12. **Existing authority:** PPV1-002A remains responsible for system time-to-first-result. PPV1-043 through PPV1-046 remain responsible for the supporting quality and trust measures used during target review.
 
   PPV1-042 measures how quickly users intentionally act after a usable evaluation is available. It does not measure engagement for its own sake and shall not reward unnecessary clicks.
-- **PPV1-043 — Correction-rate interpretation:** TODO (Founder Approval Required): Define the metric, observation window, and acceptable range without treating every correction as failure.
+- **PPV1-043 — Correction-rate interpretation:** Priority Policy v1 adopts descriptive, cohort-based correction measurement with no universal success or failure range.
+
+  1. **Metric purpose:** Correction rate measures how often reviewed candidates receive explicit user-directed tier authority. It is a measure of user control and policy interaction. It is not an accuracy, failure, disagreement, or model-quality score.
+  2. **Observation unit:** The observation unit is one application-owned, owner-scoped thread under one `policyVersion` during one observation window. Raw provider identifiers shall not be measurement identities.
+  3. **Reviewed-candidate denominator:** A candidate enters the denominator when:
+     - it is presented in a `CURRENT`, synchronization-`READY` evaluation;
+     - it is visibly and accessibly interactable;
+     - the user explicitly opens that candidate.
+
+     Passive display, pagination, focus, hover, scrolling, or automatic selection does not make a candidate reviewed. Each qualifying thread appears at most once in the denominator per policy version and observation window.
+  4. **Correction-activation numerator:** A reviewed candidate enters the numerator when an authoritative transition confirms:
+     - Prioritize became active;
+     - Not Important became active; or
+     - one correction was atomically replaced by the other.
+
+     Each reviewed candidate appears at most once in the aggregate correction-activation numerator, regardless of subsequent transitions.
+  5. **Required directional metrics:** Report separately:
+     - Prioritize activation rate;
+     - Not Important activation rate;
+     - correction replacement rate;
+     - Undo rate;
+     - rapid Undo rate;
+     - ambiguous or unconfirmed correction-outcome rate.
+
+     Prioritize and Not Important must never be collapsed into a single negative “disagreement” count.
+  6. **Observation window:** Use a rolling 28-day observation window. For Undo and replacement analysis, use a seven-day follow-up period after each authoritative correction transition. Cohorts without the complete follow-up period remain immature and must be reported separately.
+
+     Also report rapid Undo occurring within ten minutes of authoritative confirmation. Rapid Undo is an investigation signal, not automatic proof of interface failure.
+  7. **Acceptable range:** Priority Policy v1 defines no universal minimum or maximum correction-activation rate. The constitutionally acceptable correction-activation range is therefore:
+
+     > 0% through 100%, subject to truthful contextual interpretation.
+
+     No value within that range independently proves success or failure.
+
+     A low rate may indicate:
+
+     - policy alignment;
+     - low correction need;
+     - undiscoverable controls;
+     - low trust;
+     - insufficient use.
+
+     A high rate may indicate:
+
+     - healthy use of explicit control;
+     - conservative policy behavior;
+     - systematic policy mismatch;
+     - misunderstanding of correction semantics;
+     - cohort-specific needs.
+
+     These possibilities must not be resolved through inference from the rate alone.
+  8. **Baseline interpretation:** The first representative 28-day production cohort establishes an observational baseline, not a constitutional target. Subsequent reviews must compare:
+     - correction direction;
+     - Undo and replacement behavior;
+     - explanation usefulness;
+     - trust;
+     - accessibility;
+     - policy version;
+     - cohort volume and representativeness.
+
+     Material changes require investigation. Any resulting policy modification requires separate Founder approval.
+  9. **Cohort sufficiency:** Aggregate interpretation requires at least:
+     - 100 reviewed candidates;
+     - 20 distinct pseudonymous owners;
+     - a complete 28-day observation window;
+     - complete seven-day follow-up for Undo and replacement metrics.
+
+     Smaller cohorts may be reported as insufficient evidence but must not be used for constitutional success or failure claims. Single-user or internal validation may inspect local behavior without being represented as a production-level correction-rate conclusion.
+  10. **Privacy:** Measurement may collect only:
+      - pseudonymous owner and session identities;
+      - policy version;
+      - approved correction action category;
+      - authoritative transition outcome;
+      - tier before and after the transition;
+      - event timing required by the approved windows;
+      - presentation and synchronization state needed to establish eligibility.
+
+      It shall not collect solely for this metric:
+
+      - message bodies;
+      - snippets;
+      - subjects;
+      - sender or recipient data;
+      - mailbox addresses;
+      - authentication tokens;
+      - raw provider identifiers;
+      - thread content.
+
+      Application-owned `threadId` should be transformed into an owner-scoped, non-reversible measurement identity when candidate-level deduplication is required. Owner-scoped measurement identities shall not be reusable outside approved telemetry aggregation.
+  11. **Interpretation guardrails:**
+      - A correction is evidence of explicit user intent, not evidence that the user is wrong.
+      - Corrections must not be hidden, discouraged, or made harder to improve the rate.
+      - Undo must not be discouraged to reduce reversal metrics.
+      - A zero correction rate is not automatically ideal.
+      - A high correction rate is not automatically failure.
+      - Metrics shall not be interpreted across different `policyVersion` values without explicit version segmentation.
+      - No automatic policy learning, tier modification, or AI inference may result from correction telemetry.
+      - Policy changes require separate Founder approval.
 - **PPV1-044 — Explanation usefulness:** TODO (Founder Approval Required): Define the research question and success threshold.
 - **PPV1-045 — Trust measure:** TODO (Founder Approval Required): Define the qualitative or quantitative release criterion for user trust.
 - **PPV1-046 — Operational correctness:** TODO (Founder Approval Required): Approve measurable targets for deterministic replay, stale-result prevention, and policy-version reporting.
