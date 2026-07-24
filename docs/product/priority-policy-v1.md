@@ -1321,7 +1321,24 @@ The interface must not:
 - conceal why a thread was included;
 - silently change Gmail labels.
 
-- **PPV1-038 — Tier display labels:** TODO (Founder Approval Required): Approve exact user-facing tier names.
+- **PPV1-038 — Tier display labels:** Priority Policy v1 adopts the following canonical English display labels:
+
+  | Constitutional identifier | Canonical English display label |
+  |---|---|
+  | `NEEDS_ATTENTION` | Needs attention |
+  | `REVIEW_LATER` | Review later |
+  | `NO_IMMEDIATE_SIGNALS` | No immediate signals |
+
+  Constitutional rules:
+
+  1. Display labels do not change tier identifiers or semantics.
+  2. “Needs attention” communicates evidence-based guidance, not urgency, certainty, objective importance, or required action.
+  3. “Review later” does not establish a deadline or imply that review is mandatory.
+  4. “No immediate signals” does not mean unimportant, irrelevant, safe to ignore, or requiring no human judgment.
+  5. Presentation layers may localize these labels but shall preserve their constitutional meaning.
+  6. Localization shall preserve constitutional meaning rather than literal English wording. Localized labels shall not strengthen, weaken, or otherwise alter the constitutional semantics of the approved English display labels.
+  7. Explanatory and empty-state wording remains governed separately by PPV1-039 and PPV1-040.
+  8. Correction wording remains governed by PPV1-041.
 - **PPV1-039 — Empty-state copy:** TODO (Founder Approval Required): Approve wording for no candidates, stale synchronization, and unavailable evaluation states.
 - **PPV1-040 — Scope disclosure copy:** TODO (Founder Approval Required): Approve how bounded candidate coverage is communicated.
 - **PPV1-041 — Correction copy:** TODO (Founder Approval Required): Approve user-facing wording for Prioritize, Not Important, and Undo outcomes.
