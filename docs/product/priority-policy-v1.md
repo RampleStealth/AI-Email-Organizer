@@ -1531,7 +1531,136 @@ The interface must not:
   8. Provider-specific labels may be translated into familiar interface terms, but constitutional behavior remains provider-neutral.
   9. Localization may adapt grammar while preserving every claim about eligibility, exclusions, coverage, and delivery.
   10. The interface may progressively disclose the expanded explanation, but the concise scope and applicable coverage statement must remain accessible, including to assistive technology.
-- **PPV1-041 — Correction copy:** TODO (Founder Approval Required): Approve user-facing wording for Prioritize, Not Important, and Undo outcomes.
+- **PPV1-041 — Correction copy:** Priority Policy v1 adopts lifecycle-qualified canonical English copy.
+
+  **Persistent correction disclosure**
+
+  > These choices affect only your Priority Policy result. They do not change your email provider's labels.
+
+  **Action labels**
+
+  | Action | Canonical label |
+  |---|---|
+  | Create or replace with Prioritize | Prioritize |
+  | Create or replace with Not Important | Not important |
+  | Deactivate the active correction | Undo correction |
+
+  1. **Correction request pending**
+
+     Title:
+
+     > Saving your correction
+
+     Description:
+
+     > Your correction has not yet been authoritatively confirmed.
+
+     The interface must not update the confirmed tier or reason solely from this pending state. Interfaces shall not animate, celebrate, or otherwise imply successful correction persistence before authoritative confirmation.
+
+  2. **Prioritize confirmed**
+
+     Condition:
+
+     - an authoritative owner-scoped transition confirms exactly one active Prioritize correction;
+     - the resulting evaluation is confirmed.
+
+     Title:
+
+     > Moved to Needs attention
+
+     Description:
+
+     > Your Prioritize correction is active for this thread. It remains active until you undo or replace it.
+
+  3. **Not Important confirmed**
+
+     Condition:
+
+     - an authoritative owner-scoped transition confirms exactly one active Not Important correction;
+     - the resulting evaluation is confirmed.
+
+     Title:
+
+     > Moved to No immediate signals
+
+     Description:
+
+     > Your Not Important correction is active for this thread. This reflects your explicit choice, not a judgment that the thread is objectively unimportant or safe to ignore. It remains active until you undo or replace it.
+
+  4. **Undo confirmed while reevaluation is pending**
+
+     Title:
+
+     > Correction removed
+
+     Description:
+
+     > Your correction is no longer active. This thread is being reevaluated using its current constitutional evidence.
+
+  5. **Undo and reevaluation confirmed**
+
+     Title:
+
+     > Correction removed
+
+     Description:
+
+     > Your correction is no longer active. This thread was reevaluated using its current constitutional evidence.
+
+  6. **Definitive correction failure**
+
+     Condition:
+
+     - the requested transition definitively did not become authoritative.
+
+     Title:
+
+     > Correction not applied
+
+     Description:
+
+     > We could not apply your correction. The previously confirmed correction state remains unchanged.
+
+     This copy may be used only when authoritative state proves that the previous confirmed state remains unchanged.
+
+  7. **Unknown or ambiguous correction outcome**
+
+     Condition:
+
+     - active correction authority cannot be verified;
+     - a transition or Undo outcome is incomplete or ambiguous.
+
+     Title:
+
+     > Correction status unavailable
+
+     Description:
+
+     > We could not verify which correction is active. This result may not reflect your latest choice.
+
+     The interface must also preserve PPV1-035 incomplete user-correction evidence disclosure.
+
+  8. **Idempotent repeated Undo:** A repeated Undo that confirms no active correction exists must not produce duplicate success history or imply another correction was removed.
+
+     Canonical title:
+
+     > No active correction
+
+     Canonical description:
+
+     > There is no active correction to undo. The current result is based on available constitutional evidence.
+
+  Constitutional boundaries:
+
+  1. Success copy appears only after authoritative correction state and the corresponding evaluation are confirmed.
+  2. Pending copy must not imply persistence or final-tier confirmation.
+  3. Prioritize copy must not imply objective importance, urgency, certainty, or required action.
+  4. Not Important copy must not imply irrelevance, safety, or negative AI or provider judgment.
+  5. Undo copy must not imply restoration of previous intent, tiers, cached evaluations, or a correction stack.
+  6. Failed and Unknown outcomes must remain distinct.
+  7. Correction copy must not imply that Gmail or another provider was mutated.
+  8. Localization may adapt grammar while preserving correction authority, lifecycle, and uncertainty semantics.
+  9. PPV1-017A remains responsible for reason localization keys and canonical reason wording.
 
 ## 14. Non-goals
 
