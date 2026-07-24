@@ -1339,7 +1339,128 @@ The interface must not:
   6. Localization shall preserve constitutional meaning rather than literal English wording. Localized labels shall not strengthen, weaken, or otherwise alter the constitutional semantics of the approved English display labels.
   7. Explanatory and empty-state wording remains governed separately by PPV1-039 and PPV1-040.
   8. Correction wording remains governed by PPV1-041.
-- **PPV1-039 — Empty-state copy:** TODO (Founder Approval Required): Approve wording for no candidates, stale synchronization, and unavailable evaluation states.
+- **PPV1-039 — Empty-state copy:** Priority Policy v1 adopts the following canonical English state-qualified copy.
+
+  1. **Synchronization-ready empty evaluation**
+
+     Condition:
+
+     - `synchronization.coverage` is `READY`;
+     - `delivery.state` is `COMPLETE`;
+     - `candidates` is empty;
+     - `presentation.state` is `CURRENT`.
+
+     Title:
+
+     > No candidates to show
+
+     Description:
+
+     > No threads satisfy the current Priority Policy candidate scope in this synchronization-ready snapshot.
+
+  2. **Partial empty evaluation**
+
+     Condition:
+
+     - `synchronization.coverage` is `PARTIAL`;
+     - no candidates are currently represented.
+
+     Title:
+
+     > Results are incomplete
+
+     Description:
+
+     > No candidates are represented in this partial snapshot. Additional eligible threads may still be found.
+
+  3. **Stale because validity expired**
+
+     Condition:
+
+     - `presentation.state` is `STALE`;
+     - `staleCause` is `VALIDITY_EXPIRED`.
+
+     Title:
+
+     > Showing an earlier evaluation
+
+     Description:
+
+     > These results were evaluated at {evaluatedAt} and are no longer current.
+
+  4. **Stale because the provider is unavailable**
+
+     Condition:
+
+     - `presentation.state` is `STALE`;
+     - `staleCause` is `PROVIDER_UNAVAILABLE`.
+
+     Title:
+
+     > Showing an earlier evaluation
+
+     Description:
+
+     > Your email provider is temporarily unavailable. Showing the last permitted evaluation from {evaluatedAt}.
+
+  5. **Stale because synchronization is unavailable**
+
+     Condition:
+
+     - `presentation.state` is `STALE`;
+     - `staleCause` is `SYNCHRONIZATION_UNAVAILABLE`.
+
+     Title:
+
+     > Showing an earlier evaluation
+
+     Description:
+
+     > Synchronization is temporarily unavailable. Showing the last permitted evaluation from {evaluatedAt}.
+
+  6. **No presentable evaluation**
+
+     Condition:
+
+     - no current evaluation exists;
+     - no stale evaluation is permitted under PPV1-032 and PPV1-033.
+
+     Title:
+
+     > Attention view unavailable
+
+     Description:
+
+     > No current or permitted previous evaluation can be shown. Try again later.
+
+  7. **Timestamp representation:** `{evaluatedAt}` shall represent the exact PPV1-037 instant. Interfaces may use an accessible localized representation of the same instant. They shall not alter or approximate the underlying instant.
+  8. **Localization:** Localization may adapt grammar and natural phrasing while preserving constitutional meaning. Localized copy shall not strengthen, weaken, omit, or alter claims about:
+     - readiness;
+     - coverage;
+     - freshness;
+     - evidence completeness;
+     - provider availability;
+     - candidate scope.
+  9. **Prohibited claims:** Ready empty copy shall not use or imply:
+     - Inbox zero;
+     - All caught up;
+     - Nothing important;
+     - Nothing needs attention;
+     - The mailbox is empty;
+     - The user has no work.
+
+     Partial empty copy shall explicitly communicate that additional eligible candidates may still exist. Stale copy shall explicitly communicate that the displayed evaluation is not current. Unavailable copy shall not be presented as an empty candidate result.
+  10. **Supplemental interface elements:** Interfaces may add:
+      - a retry control;
+      - synchronization progress;
+      - a loading indicator;
+      - accessible supporting context.
+
+      Those elements shall not replace, contradict, or weaken the canonical state disclosure.
+  11. **“Try again later” boundary:** “Try again later” is general recovery guidance. It does not promise that availability will recover within a particular duration.
+  12. **Existing authority:** PPV1-040 remains responsible for broader candidate-scope explanation.
+
+  State copy explains what the system constitutionally knows about the displayed collection. It shall never convert uncertainty, partial coverage, staleness, or unavailability into a stronger claim.
 - **PPV1-040 — Scope disclosure copy:** TODO (Founder Approval Required): Approve how bounded candidate coverage is communicated.
 - **PPV1-041 — Correction copy:** TODO (Founder Approval Required): Approve user-facing wording for Prioritize, Not Important, and Undo outcomes.
 
