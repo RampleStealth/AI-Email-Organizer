@@ -1871,7 +1871,100 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
       - Metrics shall not be interpreted across different `policyVersion` values without explicit version segmentation.
       - No automatic policy learning, tier modification, or AI inference may result from correction telemetry.
       - Policy changes require separate Founder approval.
-- **PPV1-044 — Explanation usefulness:** TODO (Founder Approval Required): Define the research question and success threshold.
+- **PPV1-044 — Explanation usefulness:** Priority Policy v1 adopts task-based comprehension research supported by a usefulness rating.
+
+  1. **Primary research question**
+
+     > After viewing a Priority Policy tier and its reasons, can a user accurately explain why the candidate received that result, understand what the result does not claim, and identify how to exercise or undo explicit control?
+
+  2. **Required comprehension:** A participant passes the comprehension assessment only when they can, without corrective prompting:
+     1. identify the constitutional evidence represented by the displayed reason;
+     2. distinguish the final-tier-determining reason from any supporting reason;
+     3. recognize that the result does not claim urgency, objective importance, certainty, required action, or message-content understanding;
+     4. identify the available Prioritize, Not Important, and Undo behavior relevant to the scenario;
+     5. recognize that lower-tier placement does not mean irrelevant or safe to ignore.
+
+     Only items applicable to the tested scenario enter that scenario's score. An inapplicable correction or supporting-reason item must not be fabricated.
+  3. **Critical misconceptions:** The following are critical misconceptions:
+     - believing AI or semantic content analysis assigned the tier;
+     - believing the tier proves objective importance or urgency;
+     - believing `NO_IMMEDIATE_SIGNALS` means safe to ignore;
+     - believing a supporting reason independently determined the final tier when it did not;
+     - believing a correction changes provider labels;
+     - believing Undo restores an earlier correction or historical tier.
+  4. **Usefulness question:** After the comprehension assessment, ask:
+
+     > How useful was this explanation in helping you understand why this thread appeared in this tier?
+
+     Use a five-point response scale:
+
+     1. Not useful
+     2. Slightly useful
+     3. Moderately useful
+     4. Very useful
+     5. Extremely useful
+
+     The usefulness rating supplements comprehension. It shall not override a failed comprehension result.
+  5. **Founder-approved success threshold:** A representative study passes only when all of the following hold:
+     - at least 80% of participants pass every applicable required comprehension item;
+     - no individual required comprehension item has a correct-response rate below 85%;
+     - no more than 10% of participants demonstrate any critical misconception;
+     - at least 80% rate the explanation as Very useful or Extremely useful;
+     - no critical keyboard, screen-reader, focus, labeling, or reading-order barrier prevents explanation access.
+
+     Failure of any accessibility cohort to satisfy the required comprehension threshold constitutes failure of the release-decision study for that cohort and requires remediation before constitutional success may be claimed.
+  6. **Study cohort:** A release-decision study requires at least:
+     - 20 representative participants;
+     - coverage of every operative tier and reason condition;
+     - coverage of default `NO_IMMEDIATE_SIGNALS` with empty reasons;
+     - coverage of supporting-reason behavior;
+     - coverage of Prioritize, Not Important, and Undo;
+     - at least five participants who use keyboard-only navigation or relevant assistive technology.
+
+     Results from smaller formative studies may guide iteration but shall not satisfy the release threshold.
+  7. **Scenario design:** Use controlled synthetic or consented disposable scenarios. Scenarios must:
+     - use the exact approved tier labels and reason wording;
+     - preserve the constitutional reason and tier mappings;
+     - include no hidden information unavailable to the participant;
+     - avoid emotionally manipulative or unusually obvious examples;
+     - test both affirmative evidence and explicit correction outcomes;
+     - distinguish operative reasons from inactive or absent signals.
+
+     Real mailbox content is not required and should not be collected solely for this research.
+  8. **Scoring:**
+     - Use a predetermined human-review rubric.
+     - Record structured answers where possible.
+     - Free-text responses require documented human coding.
+     - AI or LLM grading shall not determine whether a response passes.
+     - Ambiguous responses must not be silently scored as correct.
+     - Researchers shall preserve the participant's original wording when resolving scoring disagreements and shall document the justification for every manual scoring override.
+     - Researchers shall not explain, coach, or correct participants until after the participant's recorded response is complete.
+  9. **Segmentation:** Results must be segmented by:
+     - `policyVersion`;
+     - language or localization;
+     - interface form factor;
+     - accessibility cohort;
+     - tested tier and reason condition.
+
+     Results from different policy versions or materially different wording must not be combined without explicit segmentation.
+  10. **Privacy:** Research shall not collect solely for this metric:
+      - authentication tokens;
+      - raw provider payloads;
+      - real message bodies;
+      - snippets;
+      - subjects;
+      - sender or recipient identities;
+      - mailbox addresses;
+      - raw provider identifiers.
+
+      Participant identifiers must be pseudonymous and limited to the approved research purpose.
+  11. **Interpretation guardrails:**
+      - Comprehension is more authoritative than positive sentiment.
+      - High satisfaction with incorrect understanding is not success.
+      - Fast task completion with constitutional misunderstanding is not success.
+      - Lower ratings are research evidence, not user failure.
+      - Findings shall not automatically modify policy.
+      - Any resulting constitutional wording or behavior change requires separate Founder approval.
 - **PPV1-045 — Trust measure:** TODO (Founder Approval Required): Define the qualitative or quantitative release criterion for user trust.
 - **PPV1-046 — Operational correctness:** TODO (Founder Approval Required): Approve measurable targets for deterministic replay, stale-result prevention, and policy-version reporting.
 
