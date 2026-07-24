@@ -1461,7 +1461,76 @@ The interface must not:
   12. **Existing authority:** PPV1-040 remains responsible for broader candidate-scope explanation.
 
   State copy explains what the system constitutionally knows about the displayed collection. It shall never convert uncertainty, partial coverage, staleness, or unavailability into a stronger claim.
-- **PPV1-040 — Scope disclosure copy:** TODO (Founder Approval Required): Approve how bounded candidate coverage is communicated.
+- **PPV1-040 — Scope disclosure copy:** Priority Policy v1 adopts a layered disclosure consisting of:
+
+  1. an always-available candidate-scope statement;
+  2. an expanded scope explanation;
+  3. a state-qualified coverage statement derived from PPV1-035.
+
+  **Canonical scope statement**
+
+  > This view evaluates threads currently in your Inbox, excluding Spam and Trash.
+
+  **Canonical expanded scope explanation**
+
+  > Priority Policy applies no age or candidate-count cutoff. Archived-only, Sent-only, Draft-only, Spam, and Trash threads are outside this view. A thread remains eligible when it is in the Inbox even if the conversation also includes sent messages or drafts.
+
+  1. **Synchronization-ready and completely delivered**
+
+     Condition:
+
+     - `synchronization.coverage` is `READY`;
+     - `delivery.state` is `COMPLETE`.
+
+     Canonical coverage statement:
+
+     > This evaluation represents the complete synchronized candidate scope for its authoritative synchronization snapshot.
+
+  2. **Synchronization-ready and partially delivered**
+
+     Condition:
+
+     - `synchronization.coverage` is `READY`;
+     - `delivery.state` is `PARTIAL`.
+
+     Canonical coverage statement:
+
+     > The synchronized candidate scope was evaluated, but this view shows only part of its results. Additional results may be available.
+
+  3. **Partial synchronization and completely delivered**
+
+     Condition:
+
+     - `synchronization.coverage` is `PARTIAL`;
+     - `delivery.state` is `COMPLETE`.
+
+     Canonical coverage statement:
+
+     > This view includes all candidates represented in a partial synchronization snapshot. Additional eligible Inbox threads may still exist.
+
+  4. **Partial synchronization and partially delivered**
+
+     Condition:
+
+     - `synchronization.coverage` is `PARTIAL`;
+     - `delivery.state` is `PARTIAL`.
+
+     Canonical coverage statement:
+
+     > Synchronization is partial, and this view shows only part of the represented results. Additional eligible Inbox threads may still exist.
+
+  Constitutional rules:
+
+  1. “Unbounded” describes policy eligibility, not synchronization or delivery completeness.
+  2. Pagination, batching, streaming, caching, and progressive delivery must not be described as eligibility limits.
+  3. A ready snapshot establishes coverage only at its authoritative synchronization checkpoint.
+  4. Coverage statements describe only the represented immutable evaluation snapshot. They shall not be interpreted as guarantees about future synchronization results, future evaluations, or future candidate availability.
+  5. Scope disclosure must not imply currentness when presentation is stale.
+  6. PPV1-039 state copy remains authoritative for empty, stale, and unavailable states.
+  7. The scope and coverage disclosure supplements PPV1-039 and must not contradict it.
+  8. Provider-specific labels may be translated into familiar interface terms, but constitutional behavior remains provider-neutral.
+  9. Localization may adapt grammar while preserving every claim about eligibility, exclusions, coverage, and delivery.
+  10. The interface may progressively disclose the expanded explanation, but the concise scope and applicable coverage statement must remain accessible, including to assistive technology.
 - **PPV1-041 — Correction copy:** TODO (Founder Approval Required): Approve user-facing wording for Prioritize, Not Important, and Undo outcomes.
 
 ## 14. Non-goals
