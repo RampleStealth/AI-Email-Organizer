@@ -1965,7 +1965,126 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
       - Lower ratings are research evidence, not user failure.
       - Findings shall not automatically modify policy.
       - Any resulting constitutional wording or behavior change requires separate Founder approval.
-- **PPV1-045 — Trust measure:** TODO (Founder Approval Required): Define the qualitative or quantitative release criterion for user trust.
+- **PPV1-045 — Trust measure:** Priority Policy v1 adopts a calibrated-trust research protocol combining comprehension, appropriate reliance, perceived control, and qualitative evidence.
+
+  1. **Definition**
+
+     Calibrated trust means:
+
+     > A user understands what Priority Policy knows, understands what it does not know, can verify why a result was produced, retains final judgment, and is willing to use the result as a starting point without treating it as authoritative truth.
+
+     High confidence without constitutional understanding is overtrust and does not satisfy this definition.
+  2. **Primary research question**
+
+     > Can users rely on Priority Policy as a transparent starting aid while accurately recognizing its limits and retaining control over their final judgment?
+
+  3. **Required trust statements:** After completing representative tasks, participants respond to these statements on a five-point scale from Strongly disagree to Strongly agree:
+     1. I understand what evidence this view used.
+     2. I understand what this view does not know.
+     3. I remain in control of the final decision.
+     4. I know how to correct or undo a result.
+     5. I would use this view as a starting point rather than a final decision.
+
+     Also ask:
+
+     > How much would you trust this view to help you decide where to begin while keeping the final judgment with you?
+
+     Use a five-point scale:
+
+     1. Not at all
+     2. Slightly
+     3. Moderately
+     4. Very much
+     5. Completely
+
+     “Completely” shall not be treated as inherently better than “Very much.” Researchers must examine whether a “Completely” response reflects overtrust.
+  4. **Calibrated-reliance scenarios:** Participants must encounter scenarios involving:
+     - a supported `NEEDS_ATTENTION` result;
+     - `REVIEW_LATER` from Manual Star;
+     - default `NO_IMMEDIATE_SIGNALS`;
+     - incomplete evidence;
+     - partial synchronization;
+     - a stale evaluation;
+     - Prioritize;
+     - Not Important;
+     - Undo.
+
+     Participants demonstrate calibrated reliance when they:
+
+     - use explanations to identify available evidence;
+     - avoid treating lower-tier mail as safe to ignore;
+     - recognize partial, stale, or incomplete states;
+     - retain independent judgment;
+     - understand that corrections affect Priority Policy rather than provider labels;
+     - know that they can correct or undo an outcome.
+  5. **Overtrust indicators:** The following are critical overtrust indicators:
+     - believing the policy understands message content or intent;
+     - believing a tier proves objective importance or urgency;
+     - believing `NO_IMMEDIATE_SIGNALS` means safe to ignore;
+     - believing all eligible mail must be represented in a partial collection;
+     - believing stale results are current;
+     - believing the policy makes the final decision;
+     - believing corrections mutate provider labels;
+     - relying on an unavailable or incomplete result as though it were complete.
+  6. **Founder-approved release threshold:** A release-decision study passes only when all of the following hold:
+     - at least 80% of participants Agree or Strongly agree with each required trust statement;
+     - at least 80% rate trust as Very much or Completely;
+     - at least 80% demonstrate calibrated reliance across every applicable scenario;
+     - no more than 10% demonstrate any critical overtrust indicator;
+     - at least 80% can identify when independent verification or caution is appropriate;
+     - PPV1-044 explanation-usefulness requirements pass;
+     - no unresolved critical qualitative trust concern remains;
+     - no critical accessibility barrier prevents understanding, verification, correction, or Undo.
+
+     A high trust rating cannot compensate for failed comprehension, overtrust, loss of control, or an accessibility failure.
+  7. **Accessibility cohorts:** Every accessibility cohort must be evaluated independently. Failure of an accessibility cohort to satisfy the calibrated-trust threshold constitutes failure for that cohort and requires remediation before constitutional trust success may be claimed.
+  8. **Study cohort:** A release-decision study requires at least:
+     - 20 representative participants;
+     - at least five participants using keyboard-only navigation or relevant assistive technology;
+     - representation of users with different email volumes and workflow complexity;
+     - coverage of every approved tier and operative reason condition;
+     - coverage of current, partial, stale, incomplete, and unavailable states.
+
+     Smaller formative studies may guide iteration but do not satisfy the release criterion.
+  9. **Qualitative protocol:** Researchers must ask participants, without leading them:
+     - what they believe the policy knows;
+     - what they believe it does not know;
+     - when they would question a result;
+     - what would cause them to distrust the view;
+     - whether they feel pressured to act;
+     - whether they understand how to correct and undo;
+     - whether any wording feels absolute, judgmental, or misleading.
+
+     Researchers shall preserve original participant wording and document every manual coding override. Researchers shall not explain or correct constitutional meaning until the participant's recorded response is complete.
+  10. **Evaluation timing:** Trust must be evaluated:
+      - before initial production release;
+      - after a `policyVersion` change;
+      - after a material change to tier labels, reason wording, correction behavior, scope disclosure, or stale-state presentation;
+      - after evidence of a recurring critical trust concern.
+
+      Results must be segmented by policy version, localization, form factor, and accessibility cohort. Historical trust studies shall preserve prior results but shall not compare or aggregate results across different `policyVersion` values without explicit version segmentation and documented rationale.
+  11. **Privacy:** Use synthetic or explicitly consented disposable scenarios whenever possible. Research shall not collect solely for this measure:
+      - authentication tokens;
+      - raw provider payloads;
+      - real message bodies;
+      - snippets;
+      - subjects;
+      - sender or recipient identities;
+      - mailbox addresses;
+      - raw provider identifiers.
+
+      Participant identities must be pseudonymous and limited to the approved research purpose.
+  12. **Interpretation guardrails:**
+      - Trust is not engagement, retention, frequency of use, or compliance.
+      - More trust is not always better.
+      - Appropriate skepticism can be evidence of calibrated trust.
+      - Researchers shall distinguish calibrated skepticism from confusion.
+      - A user choosing not to act may reflect appropriate judgment, insufficient evidence, or personal workflow, and shall not automatically be interpreted as distrust.
+      - A user correction is not automatically distrust.
+      - High sentiment with low comprehension is not success.
+      - Researchers shall not combine results across policy versions without explicit segmentation.
+      - Findings do not authorize automatic policy changes.
+      - Any constitutional change requires separate Founder approval.
 - **PPV1-046 — Operational correctness:** TODO (Founder Approval Required): Approve measurable targets for deterministic replay, stale-result prevention, and policy-version reporting.
 
 Metrics must not collect message bodies, recipient content, or other mailbox content solely for Priority Policy analytics.
