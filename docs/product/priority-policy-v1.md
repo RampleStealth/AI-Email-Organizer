@@ -213,7 +213,7 @@ Priority Policy v1 adopts independent three-state knowledge for every normalized
 5. **Label-independent rules:** All approved rules that do not depend on unavailable label evidence continue to evaluate normally.
 6. **Default tier:** If no available approved rule assigns a higher tier, PPV1-009 may independently assign `NO_IMMEDIATE_SIGNALS`. That result shall not be represented as proof that Manual Star was absent when its state was Unknown.
 7. **Disclosure:** Because incomplete label metadata can prevent evaluation of an operative constitutional signal, a collection containing affected candidates shall disclose incomplete label evidence through PPV1-035. PPV1-035 remains responsible for the exact public field names, shape, and serialization.
-8. **Recalculation:** When authoritative label metadata becomes available or changes, the candidate shall be reevaluated under the future PPV1-031 trigger rules.
+8. **Recalculation:** When authoritative label metadata becomes available or changes, the candidate shall be reevaluated under the PPV1-031 trigger rules.
 
 PPV1-004C governs policy-evidence label availability after location eligibility has otherwise been established. It does not authorize synthesis of Inbox membership or any other provider mapping.
 
@@ -884,7 +884,83 @@ An evaluation is a statement about a specific normalized projection at a specifi
   6. **Existing authorities:** PPV1-032 governs stale presentation. PPV1-033 governs cache behavior.
   7. **Evaluator purity:** The evaluator shall continue using only its caller-supplied fixed `evaluatedAt`.
   8. **Implementation requirement:** Implementations shall use the Founder-approved evaluation-validity interval and shall not invent, substitute, or locally configure another duration.
-- **PPV1-031 — Recalculation triggers:** TODO (Founder Approval Required): Approve the complete trigger set, including synchronization changes, Gmail label changes, timestamp-window changes, and user corrections.
+- **PPV1-031 — Recalculation triggers:** Priority Policy v1 adopts semantic normalized-input invalidation. An evaluation shall be invalidated immediately whenever an authoritative change could alter:
+  - candidate membership;
+  - final tier;
+  - emitted reasons;
+  - deterministic ordering;
+  - correction authority;
+  - evidence completeness;
+  - synchronization coverage;
+  - collection truthfulness;
+  - policy identity or approved parameters.
+
+  1. **Evaluation-validity expiration:** Expiration of the PPV1-030 Founder-approved evaluation-validity interval requires recalculation before the result may again be represented as current.
+  2. **Policy identity and parameter changes:** Invalidate when:
+     - `policyVersion` changes;
+     - any Founder-approved parameter affecting evaluation changes;
+     - the future-skew tolerance changes;
+     - a constitutional rule becomes newly operative, changes, or is removed under a new approved policy version.
+  3. **Candidate-scope changes:** Invalidate when:
+     - verified Inbox membership changes;
+     - verified Spam or Trash membership changes;
+     - a thread enters or leaves PPV1-001 scope;
+     - a normalized candidate is added, removed, merged, or replaced;
+     - authoritative synchronization coverage discovers or removes an eligible candidate.
+  4. **Operative candidate-input changes:** Invalidate when:
+     - the PPV1-003 candidate timestamp changes;
+     - verified incoming-message direction changes;
+     - timestamp state changes between valid and Unknown;
+     - future-skew classification changes;
+     - Manual Star changes between verified present, verified absent, and Unknown;
+     - any future Founder-approved operative constitutional input changes.
+  5. **Correction-state changes:** Invalidate when:
+     - Prioritize becomes active;
+     - Not Important becomes active;
+     - one correction is authoritatively replaced by another;
+     - Undo is authoritatively confirmed;
+     - correction state becomes ambiguous or Unknown;
+     - Unknown correction state becomes authoritative;
+     - active correction authority otherwise changes.
+  6. **Evidence-completeness changes:** Invalidate when policy-relevant evidence becomes available, unavailable, malformed, or changes state, including:
+     - candidate timestamp evidence;
+     - policy-relevant label evidence;
+     - correction evidence;
+     - any field-level state represented through PPV1-035.
+  7. **Collection-state changes:** Invalidate when:
+     - synchronization readiness changes;
+     - coverage changes between partial and ready;
+     - the authoritative checkpoint changes in a way that alters normalized constitutional inputs or coverage;
+     - collection-level evidence-completeness state changes.
+  8. **Invalidation scope:** A candidate-level trigger invalidates:
+     - the affected candidate evaluation;
+     - any collection ordering containing that candidate;
+     - any collection envelope derived from the invalidated state.
+
+     A collection-level trigger invalidates the affected collection representation.
+  9. **Recalculation requirements:** Recalculation shall use:
+     - one internally consistent normalized snapshot;
+     - the applicable `policyVersion` and approved parameters;
+     - a new caller-supplied fixed `evaluatedAt`.
+
+     Only completed deterministic reevaluation may produce a replacement current result.
+  10. **Non-triggers:** The following shall not independently require recalculation when normalized constitutional inputs and collection truth remain unchanged:
+      - provider history identifiers alone;
+      - synchronization timestamps alone;
+      - watch-renewal timestamps;
+      - projection-write timestamps;
+      - database created or updated timestamps;
+      - repeated synchronization with identical normalized results;
+      - cache retrieval;
+      - serialization;
+      - transport;
+      - UI navigation;
+      - provider response order;
+      - sender, recipient, or attachment metadata while constitutionally non-operative;
+      - message bodies, snippets, or attachment content.
+  11. **No hidden mutation:** Recalculation observes authoritative changes. It shall not itself create, modify, expire, undo, or repair provider facts or user corrections.
+
+  Operational activity is not a constitutional trigger merely because it occurred. Only a change to constitutional inputs, authority, coverage, completeness, policy identity, or validity status requires recalculation.
 - **PPV1-032 — Stale presentation:** TODO (Founder Approval Required): Define whether stale results may be shown with disclosure or must be withheld.
 - **PPV1-033 — Cache policy:** TODO (Founder Approval Required): Define cache identity, maximum lifetime, and invalidation requirements.
 
