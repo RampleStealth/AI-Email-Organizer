@@ -454,7 +454,7 @@ Recency may provide temporal context and deterministic ordering only within the 
 
 **Recency parameter values:** TODO (Founder Approval Required): Define the Recency window, number of hours, lookback duration, and exact boundary semantics.
 
-Freshness thresholds and cache duration remain unresolved under PPV1-030 and PPV1-033. The Constitution defines the role of Recency before defining its parameter values.
+Evaluation validity and cache retention are governed by PPV1-030 and PPV1-033. The Constitution defines the role of Recency before defining its unresolved parameter values.
 
 ### 6.3 Provider Mapping
 
@@ -1001,7 +1001,70 @@ An evaluation is a statement about a specific normalized projection at a specifi
      Unrelated independently valid information need not be withheld if it can still be represented truthfully without the invalidated derived state.
   6. **No truth upgrade:** Stale presentation shall not upgrade partial coverage, incomplete evidence, unavailable provider state, or any other limitation recorded by the completed evaluation.
   7. **Existing authorities:** PPV1-033 governs retention. PPV1-035 governs exact stale-state representation. PPV1-039 governs user-facing stale and unavailable wording.
-- **PPV1-033 — Cache policy:** TODO (Founder Approval Required): Define cache identity, maximum lifetime, and invalidation requirements.
+- **PPV1-033 — Cache policy:** Priority Policy v1 adopts exact owner-scoped immutable cache identity.
+
+  1. **Cache identity:** Each cached evaluation shall bind to:
+     - authenticated owner identity;
+     - mailbox identity;
+     - exact candidate-scope identity;
+     - `policyVersion`;
+     - complete Founder-approved parameter set;
+     - exact normalized constitutional input-snapshot identity;
+     - authoritative correction-state identity;
+     - synchronization readiness and coverage identity;
+     - evidence-completeness identity;
+     - original `evaluatedAt`.
+
+     Cached evaluations shall never cross owners, mailboxes, policy versions, parameter sets, scopes, correction states, coverage states, or constitutional input snapshots.
+  2. **Immutability:** A cached evaluation is immutable. Cache retrieval, serialization, transport, display, or provider unavailability shall not modify:
+     - `evaluatedAt`;
+     - `policyVersion`;
+     - tiers;
+     - reasons;
+     - ordering;
+     - readiness;
+     - coverage;
+     - evidence completeness;
+     - constitutional inputs;
+     - retention boundaries.
+  3. **Current use:** A compatible cached entry may be presented as current only while:
+     - PPV1-030 permits; and
+     - no PPV1-031 trigger has invalidated it.
+  4. **Stale use:** After PPV1-030 expiration, the same immutable entry may be presented only when PPV1-032 permits conditional stale visibility.
+  5. **Founder-approved stale-retention interval:** Priority Policy v1 defines exactly one Founder-approved stale-retention interval.
+
+     **Founder-approved stale-retention interval:** 24 hours from the original `evaluatedAt`
+
+     The boundary is inclusive:
+
+     - at exactly `evaluatedAt` plus 24 hours, the entry remains within retention;
+     - strictly after that boundary, it shall not be presented and shall be evicted from the evaluation cache.
+
+     Implementations shall not invent, substitute, extend, or locally configure another duration.
+  6. **No sliding retention:** Retrieval, use, transport, serialization, display, cache access, application restart, or provider unavailability shall not extend the current-validity or stale-retention interval.
+  7. **Immediate semantic invalidation:** A PPV1-031 trigger immediately removes the affected entry from both current and stale presentation eligibility. Known-invalid entries shall never be used as PPV1-032 stale fallback, even if physical deletion is asynchronous.
+  8. **Cache authority:** Cache is an optimization and never a source of constitutional truth. A cache miss does not alter evaluation semantics. A cache failure shall result only in:
+     - deterministic reevaluation; or
+     - truthful unavailability.
+  9. **Privacy and identity boundaries:** Cache keys and entries shall not expose or derive identity from:
+     - message bodies;
+     - snippets;
+     - subjects;
+     - recipients;
+     - authentication tokens;
+     - raw provider payloads;
+     - raw provider identifiers.
+
+     Application-owned `threadId` values may appear only within their authorized owner-scoped cached evaluations.
+  10. **Policy compatibility:** A `policyVersion` or Founder-approved parameter change invalidates every incompatible cached entry.
+  11. **No claim upgrades:** Stale retention shall never upgrade:
+      - synchronization readiness;
+      - candidate coverage;
+      - evidence completeness;
+      - freshness;
+      - provider availability.
+
+  Cache may preserve an immutable last-known evaluation. It may never preserve that evaluation's authority after a known constitutional invalidation.
 
 An implementation must always expose `evaluatedAt` and `policyVersion`. Cached evaluations must be scoped to the authenticated owner and exact policy inputs.
 
