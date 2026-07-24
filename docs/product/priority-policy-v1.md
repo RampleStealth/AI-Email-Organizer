@@ -2297,7 +2297,25 @@ FD-001
 
 Approval date:
 
-**PPV1-047 — Approval date:** TODO (Founder Approval Required)
+**PPV1-047 — Approval date:** 2026-07-24
+
+Constitutional rules:
+
+1. `2026-07-24` is the calendar date on which the Founder approved the repository document as the constitutional engineering source of truth under FD-001.
+2. The date uses ISO 8601 calendar-date format: `YYYY-MM-DD`.
+3. The approval date belongs to Priority Policy v1 and Attention Contract v1 document governance.
+4. It does not independently approve:
+   - unresolved Founder TODOs;
+   - source-code implementation;
+   - contracts;
+   - APIs;
+   - migrations;
+   - UI behavior;
+   - production release.
+5. Subsequent Founder-approved amendments retain their own revision-history dates.
+6. Subsequent amendments shall not replace or advance the original approval date.
+7. A future policy version requires its own Founder approval record and date.
+8. Approval-date changes require a documented correction amendment. They must not silently rewrite governance history.
 
 Approval boundary:
 
@@ -2310,7 +2328,7 @@ The document structure, philosophy, design promise, deterministic/non-AI boundar
 | 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #5 contract vocabulary decisions for tier identifiers, evidence-specific reason codes, localized canonical reasons, reason precedence, empty-reason representation, and canonical timestamps. |
 | 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #4 decisions defining Recency as objective temporal evidence, prohibiting tier promotion from Recency alone, preserving explicit user-intent precedence, and permitting Recency only as a deterministic tie-breaker when candidates are otherwise constitutionally equal. |
 | 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #3 decisions for Manual user star, provider-verifiable signal origin, missing-metadata fallbacks, candidate-count scalability, provider neutrality, explicit User Override, and AI independence. |
-| 1.0 | Approved | Pending PPV1-047 | Founder | Established the repository source of truth under FD-001. Unresolved policy decisions are enumerated for Founder review before executable implementation. |
+| 1.0 | Approved | 2026-07-24 | Founder | Established the repository source of truth under FD-001. Unresolved policy decisions are enumerated for Founder review before executable implementation. |
 
 Changes to operative policy require:
 
