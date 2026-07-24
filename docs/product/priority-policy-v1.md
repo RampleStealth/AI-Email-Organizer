@@ -961,7 +961,46 @@ An evaluation is a statement about a specific normalized projection at a specifi
   11. **No hidden mutation:** Recalculation observes authoritative changes. It shall not itself create, modify, expire, undo, or repair provider facts or user corrections.
 
   Operational activity is not a constitutional trigger merely because it occurred. Only a change to constitutional inputs, authority, coverage, completeness, policy identity, or validity status requires recalculation.
-- **PPV1-032 — Stale presentation:** TODO (Founder Approval Required): Define whether stale results may be shown with disclosure or must be withheld.
+- **PPV1-032 — Stale presentation:** Priority Policy v1 adopts conditional stale visibility.
+
+  1. **Presentation state:** Staleness is a presentation state rather than an evaluation state. A completed deterministic evaluation remains immutable after completion. Becoming stale changes only whether and how that evaluation may be represented. It shall not modify the evaluation's:
+     - constitutional outputs;
+     - `evaluatedAt`;
+     - `policyVersion`;
+     - candidate ordering;
+     - tiers;
+     - reasons;
+     - readiness;
+     - coverage;
+     - evidence completeness;
+     - any other evaluated fact.
+  2. **Permitted stale visibility:** A stale evaluation may remain visible only when it is the last successfully completed deterministic evaluation and staleness results from:
+     - PPV1-030 interval expiration without a known semantic input change; or
+     - temporary provider or synchronization unavailability without evidence that the evaluated normalized snapshot changed.
+  3. **Required preservation and disclosure:** A visible stale result must:
+     - be explicitly identified as stale;
+     - preserve its original `evaluatedAt`;
+     - preserve its original `policyVersion`;
+     - preserve its original readiness, coverage, and evidence-completeness state;
+     - never be represented as current;
+     - never have its timestamp refreshed by retrieval or presentation;
+     - remain subject to PPV1-033 retention limits;
+     - be replaced only by completed deterministic reevaluation.
+  4. **Known invalidation:** A stale result shall be withheld when a known PPV1-031 trigger establishes that its constitutional state may no longer be accurate, including:
+     - authoritative correction changes;
+     - known candidate-scope changes;
+     - known operative evidence changes;
+     - known collection-coverage changes;
+     - `policyVersion` changes;
+     - approved parameter changes.
+  5. **Scoped invalidation:** A known candidate-level change requires withholding:
+     - the affected candidate evaluation;
+     - any ordering derived from it;
+     - any collection envelope derived from it.
+
+     Unrelated independently valid information need not be withheld if it can still be represented truthfully without the invalidated derived state.
+  6. **No truth upgrade:** Stale presentation shall not upgrade partial coverage, incomplete evidence, unavailable provider state, or any other limitation recorded by the completed evaluation.
+  7. **Existing authorities:** PPV1-033 governs retention. PPV1-035 governs exact stale-state representation. PPV1-039 governs user-facing stale and unavailable wording.
 - **PPV1-033 — Cache policy:** TODO (Founder Approval Required): Define cache identity, maximum lifetime, and invalidation requirements.
 
 An implementation must always expose `evaluatedAt` and `policyVersion`. Cached evaluations must be scoped to the authenticated owner and exact policy inputs.
