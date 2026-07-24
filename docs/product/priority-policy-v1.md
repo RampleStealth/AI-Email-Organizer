@@ -84,7 +84,7 @@ The candidate set must be policy-scoped, owner-scoped, and described truthfully 
 
 The policy evaluates thread-level normalized metadata. Message bodies, snippets, attachment contents, and generated summaries are not candidate evidence.
 
-The exact scope remains unresolved:
+Constitutional candidate-scope decisions:
 
 - **PPV1-001 — Eligible Gmail location:** Current Inbox membership defines constitutional location eligibility.
 
@@ -1094,9 +1094,55 @@ Contract invariants:
 - No confidence score, inferred urgency, raw Gmail response, message content, or hidden diagnostic is returned.
 - Identical normalized input and identical `evaluatedAt` produce an identical evaluation object.
 
-Unresolved contract decisions:
+Collection contract decisions:
 
-- **PPV1-034 — Candidate-scope disclosure:** TODO (Founder Approval Required): Define the exact structured `candidateScope` representation returned with a collection evaluation.
+- **PPV1-034 — Candidate-scope disclosure:** Priority Policy v1 adopts the following provider-neutral structured `candidateScope` object:
+
+  ```text
+  candidateScope: {
+    entityType: "THREAD",
+    ownerScope: "AUTHENTICATED_OWNER",
+    mailboxScope: "REQUESTED_MAILBOX",
+    locationKnowledge: "VERIFIED",
+    requiredPresentLocations: ["INBOX"],
+    requiredAbsentLocations: ["SPAM", "TRASH"],
+    additionalLocationMembership: "DOES_NOT_DISQUALIFY",
+    temporalLookback: "UNBOUNDED",
+    candidateCountLimit: "UNBOUNDED"
+  }
+  ```
+
+  1. **Entity type:** `entityType` shall be `THREAD`. The policy evaluates logical owner-scoped thread projections, not individual messages.
+  2. **Owner boundary:** `ownerScope` shall be `AUTHENTICATED_OWNER`. This communicates owner isolation without exposing owner identity in the scope object.
+  3. **Mailbox boundary:** `mailboxScope` shall be `REQUESTED_MAILBOX`. The collection applies only to the authorized mailbox represented by the response.
+  4. **Location knowledge:** `locationKnowledge` shall be `VERIFIED`. Location eligibility requires authoritative provider-neutral normalized location evidence.
+  5. **Required present location:** `requiredPresentLocations` shall contain exactly:
+     - `INBOX`
+
+     A candidate must have verified normalized Inbox membership.
+  6. **Required absent locations:** `requiredAbsentLocations` shall contain exactly:
+     - `SPAM`
+     - `TRASH`
+
+     A candidate must have verified absence from those locations.
+  7. **Additional locations:** `additionalLocationMembership` shall be `DOES_NOT_DISQUALIFY`. Sent, Draft, or other additional location participation shall not disqualify an otherwise eligible Inbox thread.
+  8. **Temporal scope:** `temporalLookback` shall be `UNBOUNDED`. The contract shall not use `null`, omission, zero, or a numeric sentinel to represent this rule.
+  9. **Candidate-count scope:** `candidateCountLimit` shall be `UNBOUNDED`. This represents constitutional eligibility only and shall not be interpreted as proof that every eligible candidate was discovered, evaluated, or delivered in one response.
+  10. **Separation from collection state:** `candidateScope` describes eligibility rules only. It shall not contain or imply:
+      - synchronization readiness;
+      - partial or complete coverage;
+      - pagination state;
+      - batching state;
+      - streaming state;
+      - delivery completeness;
+      - freshness;
+      - evidence completeness.
+
+      PPV1-035 remains the sole authority for those collection-level facts.
+  11. **Provider neutrality:** The normalized identifiers `INBOX`, `SPAM`, and `TRASH` are constitutional concepts. Provider-specific labels and mappings remain governed by the future Provider Mapping Specification.
+  12. **Deterministic representation:** Field names and enum values shall be canonical. Array ordering shall be deterministic and exactly as constitutionally defined.
+
+  An `UNBOUNDED` constitutional scope does not claim that the current collection contains every eligible candidate. It means the policy itself imposes no temporal or candidate-count cutoff.
 - **PPV1-035 — Collection envelope:** TODO (Founder Approval Required): Define the collection-level fields needed to truthfully describe bounded coverage, synchronization freshness, and ordering.
 
 ### PPV1-036 — No-reason representation
