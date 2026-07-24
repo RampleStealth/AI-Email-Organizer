@@ -2085,7 +2085,166 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
       - Researchers shall not combine results across policy versions without explicit segmentation.
       - Findings do not authorize automatic policy changes.
       - Any constitutional change requires separate Founder approval.
-- **PPV1-046 — Operational correctness:** TODO (Founder Approval Required): Approve measurable targets for deterministic replay, stale-result prevention, and policy-version reporting.
+- **PPV1-046 — Operational correctness:** Priority Policy v1 adopts zero-tolerance constitutional correctness targets supported by deterministic tests, bounded fault injection, and privacy-preserving runtime verification.
+
+  1. **Correctness principle:** Operational scale, concurrency, caching, retries, pagination, serialization, and deployment topology shall not weaken constitutional correctness. Availability may have an error budget. Constitutional truthfulness shall not.
+  2. **Deterministic replay target**
+
+     Target:
+
+     > 100% exact canonical output equality for identical constitutional inputs, identical evaluatedAt, identical policyVersion, and identical Founder-approved parameters.
+
+     Mismatch target:
+
+     > Zero deterministic replay mismatches.
+
+     Equality includes:
+
+     - candidate membership;
+     - tier;
+     - ordered reason codes;
+     - ordered reason wording;
+     - candidate ordering;
+     - collection scope;
+     - synchronization coverage;
+     - evidence completeness;
+     - delivery facts;
+     - validity boundaries;
+     - policy version.
+
+     Replay must remain identical across:
+
+     - repeated calls;
+     - process restarts;
+     - runtime instances;
+     - asynchronous completion order;
+     - input collection iteration order;
+     - database retrieval order;
+     - provider response order;
+     - pagination boundaries;
+     - supported deployment platforms.
+
+     Canonical serialization differences caused only by forbidden nondeterministic field ordering count as failures.
+  3. **Stale-result prevention targets:** The following targets are absolute:
+     - zero evaluations presented as `CURRENT` strictly after `validThrough`;
+     - zero known-invalid evaluations presented as either `CURRENT` or `STALE`;
+     - zero evaluations presented strictly after `staleRetentionThrough`;
+     - zero cache retrievals that advance or replace `evaluatedAt`;
+     - zero stale presentations without the correct `STALE` state and approved `staleCause`;
+     - zero stale presentations that upgrade readiness, coverage, evidence completeness, delivery completeness, or provider availability;
+     - 100% enforcement of inclusive validity and retention boundaries;
+     - 100% withholding of affected derived collections after a known PPV1-031 invalidation.
+
+     Temporary inability to produce an evaluation must result in truthful unavailability, not reuse of a constitutionally invalid result.
+  4. **Policy-version reporting targets:** The following targets are absolute:
+     - 100% of candidate evaluations include the exact operative `policyVersion`;
+     - 100% of collection envelopes include the exact operative `policyVersion`;
+     - zero collections contain candidates from mixed policy versions;
+     - zero cached evaluations cross policy-version boundaries;
+     - zero incompatible parameter sets share a cache identity;
+     - 100% of policy-version or approved-parameter changes invalidate incompatible cache entries;
+     - 100% of telemetry and research reporting is explicitly segmented by policy version.
+
+     Missing, malformed, inferred, defaulted, or locally substituted policy versions are correctness failures.
+  5. **Owner and scope integrity targets:** Because replay and caching are owner-scoped:
+     - zero evaluations cross authenticated-owner boundaries;
+     - zero evaluations cross mailbox boundaries;
+     - zero cache entries cross candidate-scope identities;
+     - zero application-owned thread identifiers appear in another owner's evaluation.
+
+     Any owner-boundary violation is a security incident as well as a constitutional correctness failure.
+  6. **Required pre-release verification:** Release evidence must include:
+     1. exhaustive tests for every approved rule, tier, reason, correction state, Unknown state, and boundary condition;
+     2. deterministic permutation tests for candidate input order and asynchronous completion order;
+     3. at least 10,000 generated replay cases per operative `policyVersion`;
+     4. replay of every generated case across at least two fresh evaluator instances;
+     5. fixed-clock tests at:
+        - exactly `validThrough`;
+        - strictly after `validThrough`;
+        - exactly `staleRetentionThrough`;
+        - strictly after `staleRetentionThrough`;
+     6. tests for every PPV1-031 invalidation category;
+     7. cache-identity and cross-owner isolation tests;
+     8. canonical serialization tests;
+     9. process-restart and concurrent-evaluation tests;
+     10. fault-injection tests covering cache failure, provider unavailability, synchronization unavailability, partial coverage, and incomplete evidence.
+
+     Every required test must pass. Retrying a failed deterministic test until it passes does not satisfy the release gate.
+  7. **Staging verification:** Before production release, run a minimum 24-hour controlled staging or equivalent accelerated deterministic simulation that includes:
+     - repeated evaluation;
+     - cache retrieval and expiry;
+     - semantic invalidation;
+     - policy-version mismatch attempts;
+     - concurrent requests;
+     - process restart;
+     - partial and stale presentation;
+     - unavailable-provider conditions.
+
+     The staging gate requires zero constitutional correctness violations.
+  8. **Production reporting:** Report at minimum for each `policyVersion`:
+     - total completed evaluations;
+     - replay verifications performed;
+     - deterministic replay mismatches;
+     - current-after-validity violations;
+     - known-invalid presentation attempts blocked;
+     - known-invalid presentations observed;
+     - beyond-retention presentation violations;
+     - missing or mismatched policy versions;
+     - mixed-version collection attempts blocked;
+     - mixed-version collections observed;
+     - cache-identity violations;
+     - owner- or mailbox-scope violations.
+
+     Blocked invalid attempts and observed violations must remain distinct.
+
+     Operational correctness reports shall distinguish:
+
+     - attempted violations detected and blocked;
+     - internal violations detected before presentation;
+     - user-visible violations.
+
+     These categories shall never be merged into a single operational metric.
+  9. **Runtime verification privacy:** Runtime verification may retain:
+     - policy version;
+     - invariant category;
+     - success or failure count;
+     - timing boundary category;
+     - pseudonymous owner-scoped measurement identity;
+     - keyed fingerprints of canonical constitutional inputs and outputs when replay comparison requires them.
+
+     It shall not retain solely for verification:
+
+     - message bodies;
+     - snippets;
+     - subjects;
+     - sender or recipient data;
+     - mailbox addresses;
+     - authentication tokens;
+     - raw provider payloads;
+     - raw provider identifiers.
+
+     Fingerprints must be scoped to approved verification, must not permit reconstruction, and must not be reusable for unrelated analytics.
+  10. **Failure handling:** Any observed constitutional correctness violation:
+      - blocks release when found before production;
+      - triggers incident review when found in production;
+      - suspends claims of operational correctness for the affected policy version and scope;
+      - requires root-cause analysis and focused regression coverage;
+      - requires verification that affected cached or presented results are no longer usable;
+      - does not authorize silent data repair or policy modification.
+
+      No constitutional correctness violation may be resolved solely by suppressing telemetry, relaxing verification, or reclassifying the violation. Remediation shall address the underlying cause before operational correctness claims are restored.
+
+      Every production incident affecting constitutional correctness shall produce a permanent regression test covering the identified failure mode before the incident is considered fully resolved.
+
+      A policy change requires separate Founder approval.
+  11. **Interpretation guardrails:**
+      - Zero observed violations is not proof that unobserved violations are impossible.
+      - Test volume does not replace coverage of constitutional boundaries.
+      - Availability failure must not be converted into stale-result misuse.
+      - A blocked invalid presentation demonstrates guardrail operation and is not equivalent to an invalid result reaching a user.
+      - Metrics must remain segmented by `policyVersion`.
+      - Performance optimization cannot relax deterministic equality.
+      - Operational telemetry cannot modify tiers, reasons, ordering, or policy behavior.
 
 Metrics must not collect message bodies, recipient content, or other mailbox content solely for Priority Policy analytics.
 
