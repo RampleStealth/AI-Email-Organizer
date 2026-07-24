@@ -1686,7 +1686,93 @@ Priority Policy v1 does not include:
 
 Success must measure whether the policy reduces uncertainty and earns trust, not whether it maximizes engagement.
 
-- **PPV1-042 — Time-to-first-action target:** TODO (Founder Approval Required): Approve the target and measurement protocol.
+- **PPV1-042 — Time-to-first-action target:** Priority Policy v1 adopts the following time-to-first-action measurement protocol with a provisional Founder target.
+
+  1. **Metric purpose:** Time-to-first-action measures user decision time after a usable qualifying evaluation is presented. It shall remain distinct from PPV1-002A system-delivery latency.
+  2. **Qualifying evaluation state:** The decision-time clock begins only when:
+     - `presentation.state` is `CURRENT`;
+     - `synchronization.coverage` is `READY`;
+     - at least one candidate is delivered;
+     - the first delivered candidate and its available actions are visibly and accessibly interactable.
+
+     Partial, stale, empty, unavailable, and loading states do not begin the decision-time clock. Their frequency shall be reported separately.
+  3. **Clock start:** The clock begins at the first instant the qualifying evaluation becomes visibly and accessibly interactable.
+  4. **Clock end:** The clock ends when the interface accepts the first explicit user-initiated candidate action:
+     - opening a candidate thread;
+     - selecting Prioritize;
+     - selecting Not Important.
+
+     Provider, API, persistence, and reevaluation latency after accepted input do not extend decision time.
+  5. **Non-actions:** The following shall not end the clock:
+     - hover;
+     - focus movement;
+     - scrolling;
+     - pagination;
+     - loading;
+     - automatic selection;
+     - route restoration;
+     - background refresh;
+     - passive visibility;
+     - keyboard navigation without activation;
+     - programmatic events.
+  6. **Session boundary:** A qualifying action session is a qualifying evaluation session in which an approved intentional action occurs before:
+     - the user leaves the Attention view; or
+     - the session ends after ten minutes of inactivity.
+
+     Sessions without an action shall not enter the within-60-seconds denominator. They shall be reported separately as the no-action session rate.
+  7. **Required reporting:** Report at minimum:
+     - qualifying evaluation sessions;
+     - qualifying action sessions;
+     - percentage reaching action within 60 seconds;
+     - median time-to-first-action;
+     - 75th percentile;
+     - 90th percentile;
+     - no-action session rate;
+     - excluded sessions grouped by partial, stale, empty, unavailable, and loading states.
+  8. **Founder-approved reporting threshold:** The initial reporting threshold is:
+
+     **60 seconds**
+
+     Implementations shall not substitute another threshold without Founder approval.
+  9. **Provisional Founder target:** The initial provisional target is:
+
+     > At least 75% of qualifying action sessions reach a first intentional candidate action within 60 seconds.
+
+     This target shall be reviewed after the first representative production baseline period. The review must consider, at minimum:
+
+     - no-action session rate;
+     - explanation usefulness;
+     - correction quality;
+     - trust;
+     - accessibility;
+     - operational correctness;
+     - qualifying-session volume and representativeness.
+
+     Until that review is completed, the 75% value shall be treated as a provisional Sprint target rather than a permanent constitutional success boundary.
+  10. **Privacy:** Measurement may collect only:
+      - pseudonymous session identity;
+      - timing boundaries;
+      - approved action category;
+      - collection presentation state;
+      - synchronization coverage;
+      - delivery state;
+      - `policyVersion`.
+
+      It shall not collect solely for this metric:
+
+      - message bodies;
+      - snippets;
+      - subjects;
+      - sender or recipient data;
+      - mailbox addresses;
+      - raw provider identifiers;
+      - authentication tokens;
+      - thread content;
+      - application-owned `threadId`.
+  11. **Interpretation guardrails:** Faster action is not automatically better. No-action sessions are not automatically failures. Interfaces shall not manufacture urgency, hide explanation, reduce user control, or encourage unnecessary action to improve the metric. A change that improves time-to-first-action while harming trust, correction quality, explanation usefulness, accessibility, or correctness shall not be considered successful.
+  12. **Existing authority:** PPV1-002A remains responsible for system time-to-first-result. PPV1-043 through PPV1-046 remain responsible for the supporting quality and trust measures used during target review.
+
+  PPV1-042 measures how quickly users intentionally act after a usable evaluation is available. It does not measure engagement for its own sake and shall not reward unnecessary clicks.
 - **PPV1-043 — Correction-rate interpretation:** TODO (Founder Approval Required): Define the metric, observation window, and acceptable range without treating every correction as failure.
 - **PPV1-044 — Explanation usefulness:** TODO (Founder Approval Required): Define the research question and success threshold.
 - **PPV1-045 — Trust measure:** TODO (Founder Approval Required): Define the qualitative or quantitative release criterion for user trust.
