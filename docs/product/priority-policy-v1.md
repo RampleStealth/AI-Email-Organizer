@@ -868,7 +868,22 @@ The persistence and product workflow for corrections are outside the current imp
 
 An evaluation is a statement about a specific normalized projection at a specific `evaluatedAt` instant. It must not be presented as current after its inputs become stale.
 
-- **PPV1-030 — Evaluation validity interval:** TODO (Founder Approval Required): Define the maximum age of an evaluation before it must be recalculated.
+- **PPV1-030 — Evaluation validity interval:** Priority Policy v1 defines exactly one Founder-approved evaluation-validity interval.
+
+  **Founder-approved evaluation-validity interval:** 5 minutes
+
+  1. **Current boundary:** An evaluation may be represented as current only through `evaluatedAt` plus the Founder-approved evaluation-validity interval.
+  2. **Inclusive boundary:** The interval boundary is inclusive. Strictly after that boundary, the evaluation is stale.
+  3. **Immediate invalidation:** Any PPV1-031 trigger invalidates the evaluation immediately regardless of elapsed time.
+  4. **Timestamp integrity:** Reformatting, serialization, rereading, cache retrieval, or transport shall never advance `evaluatedAt`. Only deterministic reevaluation may produce a new `evaluatedAt`.
+  5. **Separation of concerns:** Evaluation freshness shall remain independent from:
+     - synchronization readiness;
+     - provider freshness;
+     - candidate coverage;
+     - evidence completeness.
+  6. **Existing authorities:** PPV1-032 governs stale presentation. PPV1-033 governs cache behavior.
+  7. **Evaluator purity:** The evaluator shall continue using only its caller-supplied fixed `evaluatedAt`.
+  8. **Implementation requirement:** Implementations shall use the Founder-approved evaluation-validity interval and shall not invent, substitute, or locally configure another duration.
 - **PPV1-031 — Recalculation triggers:** TODO (Founder Approval Required): Approve the complete trigger set, including synchronization changes, Gmail label changes, timestamp-window changes, and user corrections.
 - **PPV1-032 — Stale presentation:** TODO (Founder Approval Required): Define whether stale results may be shown with disclosure or must be withheld.
 - **PPV1-033 — Cache policy:** TODO (Founder Approval Required): Define cache identity, maximum lifetime, and invalidation requirements.
