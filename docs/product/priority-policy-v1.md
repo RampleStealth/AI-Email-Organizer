@@ -1143,7 +1143,144 @@ Collection contract decisions:
   12. **Deterministic representation:** Field names and enum values shall be canonical. Array ordering shall be deterministic and exactly as constitutionally defined.
 
   An `UNBOUNDED` constitutional scope does not claim that the current collection contains every eligible candidate. It means the policy itself imposes no temporal or candidate-count cutoff.
-- **PPV1-035 — Collection envelope:** TODO (Founder Approval Required): Define the collection-level fields needed to truthfully describe bounded coverage, synchronization freshness, and ordering.
+- **PPV1-035 — Collection envelope:** Priority Policy v1 adopts a collection envelope that separates immutable evaluation facts from mutable presentation state.
+
+  Canonical structure:
+
+  ```text
+  {
+    evaluation: {
+      policyVersion,
+      evaluatedAt,
+      validThrough,
+      staleRetentionThrough,
+      candidateScope,
+      synchronization: {
+        coverage: "READY" | "PARTIAL"
+      },
+      evidenceCompleteness: {
+        state: "COMPLETE" | "INCOMPLETE",
+        incompleteEvidence: [
+          {
+            kind:
+              "CANDIDATE_TIMESTAMP"
+              | "POLICY_LABELS"
+              | "USER_CORRECTIONS",
+            affectedCandidateCount
+          }
+        ]
+      },
+      delivery: {
+        state: "COMPLETE" | "PARTIAL",
+        evaluatedCandidateCount,
+        returnedCandidateCount,
+        continuationAvailable
+      },
+      ordering: {
+        scheme: "PRIORITY_POLICY_V1"
+      },
+      candidates
+    },
+
+    presentation:
+      {
+        state: "CURRENT",
+        presentedAt,
+        providerAvailability:
+          "AVAILABLE" | "UNAVAILABLE" | "UNKNOWN"
+      }
+      |
+      {
+        state: "STALE",
+        presentedAt,
+        staleCause:
+          "VALIDITY_EXPIRED"
+          | "PROVIDER_UNAVAILABLE"
+          | "SYNCHRONIZATION_UNAVAILABLE",
+        providerAvailability:
+          "AVAILABLE" | "UNAVAILABLE" | "UNKNOWN"
+      }
+  }
+  ```
+
+  1. **Immutable evaluation:** The `evaluation` object becomes immutable when deterministic evaluation completes. Presentation changes shall never mutate:
+     - `policyVersion`;
+     - `evaluatedAt`;
+     - `validThrough`;
+     - `staleRetentionThrough`;
+     - `candidateScope`;
+     - synchronization coverage;
+     - evidence completeness;
+     - delivery facts;
+     - ordering;
+     - candidates;
+     - candidate tiers or reasons.
+  2. **Mutable presentation state:** The `presentation` object communicates whether and how the immutable evaluation is being shown. It may change from `CURRENT` to `STALE` only when PPV1-032 permits. Presentation changes do not create a new evaluation.
+  3. **Policy identity and timestamps:** `policyVersion` identifies the exact constitutional policy used. `evaluatedAt` is the original fixed evaluation time. `validThrough` shall be deterministically derived from:
+     - `evaluatedAt`; and
+     - the Founder-approved PPV1-030 evaluation-validity interval.
+
+     `staleRetentionThrough` shall be deterministically derived from:
+
+     - `evaluatedAt`; and
+     - the Founder-approved PPV1-033 stale-retention interval.
+
+     PPV1-035 shall not duplicate or independently redefine those parameter values.
+  4. **Candidate scope:** `candidateScope` shall be exactly the PPV1-034 canonical object. It describes constitutional eligibility only.
+  5. **Synchronization coverage:** `synchronization.coverage` shall be:
+     - `READY` when PPV1-005 authoritative candidate coverage is established;
+     - `PARTIAL` otherwise when partial results are truthfully represented.
+
+     Coverage shall not redefine candidate eligibility.
+  6. **Evidence completeness:** `evidenceCompleteness.state` shall be `COMPLETE` only when no represented candidate has incomplete operative constitutional evidence. Otherwise it shall be `INCOMPLETE`.
+
+     `incompleteEvidence` kinds are canonical and ordered exactly as follows:
+
+     1. `CANDIDATE_TIMESTAMP`
+     2. `POLICY_LABELS`
+     3. `USER_CORRECTIONS`
+
+     Entries shall be deduplicated. `affectedCandidateCount` counts affected candidates represented in that immutable evaluation. It shall not imply complete mailbox coverage when `synchronization.coverage` is `PARTIAL`. When `state` is `COMPLETE`, `incompleteEvidence` shall be an empty array.
+  7. **Delivery state:** `delivery.state` shall distinguish whether the immutable evaluation's results were completely returned. `evaluatedCandidateCount` counts candidates evaluated in the represented immutable evaluation. `returnedCandidateCount` counts candidate entries included in the current delivery. `continuationAvailable` communicates whether additional results from the same immutable evaluation remain retrievable. Pagination, batching, streaming, and progressive delivery shall not redefine eligibility or synchronization coverage.
+  8. **Ordering:** `ordering.scheme` shall be `PRIORITY_POLICY_V1`. This certifies that PPV1-020 through PPV1-023 govern candidate ordering.
+  9. **Presentation current state:** `CURRENT` presentation shall contain:
+     - `presentedAt`;
+     - `providerAvailability`.
+
+     `CURRENT` shall be permitted only while PPV1-030 and PPV1-031 allow the evaluation to be represented as current.
+  10. **Presentation stale state:** `STALE` presentation shall contain:
+      - `presentedAt`;
+      - `staleCause`;
+      - `providerAvailability`.
+
+      `staleCause` shall be exactly one of:
+
+      - `VALIDITY_EXPIRED`
+      - `PROVIDER_UNAVAILABLE`
+      - `SYNCHRONIZATION_UNAVAILABLE`
+
+      `STALE` shall be permitted only under PPV1-032. Known semantic invalidation shall not be represented through `STALE`.
+  11. **Provider availability:** `providerAvailability` describes presentation-time provider access only. It shall not modify or upgrade:
+      - synchronization coverage;
+      - evaluation freshness;
+      - candidate scope;
+      - evidence completeness;
+      - delivery completeness.
+  12. **Expired results:** An evaluation strictly beyond `staleRetentionThrough` shall not be presented. No `EXPIRED` presentation state is required. The system shall instead provide a truthful unavailable or no-presentable-evaluation response under the applicable contract and UX rules.
+  13. **Timestamp serialization:** All timestamps shall use PPV1-037 canonical RFC 3339 UTC serialization with millisecond precision.
+  14. **Empty collections:** An empty `candidates` array remains a valid evaluation result when PPV1-006 permits it. The envelope must preserve the readiness, coverage, evidence, delivery, freshness, and presentation facts explaining that empty result.
+  15. **Privacy and provider neutrality:** The envelope shall not expose:
+      - raw provider identifiers;
+      - owner identifiers;
+      - mailbox addresses;
+      - authentication tokens;
+      - message bodies;
+      - snippets;
+      - raw provider payloads;
+      - implementation diagnostics.
+  16. **Deterministic representation:** Field names, enum values, array ordering, and conditional field presence shall be canonical and versioned.
+
+  The collection envelope communicates several independent constitutional dimensions. No single status field shall collapse eligibility, coverage, evidence completeness, delivery, freshness, or provider availability into one aggregate meaning.
 
 ### PPV1-036 — No-reason representation
 
