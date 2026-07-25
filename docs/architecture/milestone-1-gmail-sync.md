@@ -1,5 +1,9 @@
 # Milestone 1: Gmail connection and synchronization
 
+**Status: Complete historical milestone.**
+
+This document preserves the scope and correctness requirements of the first project milestone. It does not represent the current overall project status and does not include features delivered later. See the [project roadmap](project-roadmap.md) for the current sequence.
+
 ## Scope
 
 This release connects one Gmail account, synchronizes a bounded recent metadata window, receives change notifications, and exposes connection health. It does not render a mailbox, mutate Gmail content, or invoke AI.
