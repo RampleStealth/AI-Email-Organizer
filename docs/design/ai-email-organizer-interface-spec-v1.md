@@ -1,42 +1,41 @@
-# Wong Design System v1
+# AI Email Organizer Interface Specification v1
 
 ## Document control and status
 
 | Field | Value |
 | --- | --- |
-| Status | Evaluation design source; existing UI evidence plus proposed PPV1 requirements |
+| Status | Product-specific evaluation design source; existing UI evidence plus proposed PPV1 requirements |
 | Version | 1.0 |
-| Related | [Priority Policy](../product/priority-policy-v1.md), [Product architecture](../architecture/product-architecture-v1.md), [Data/state model](../architecture/data-state-model-v1.md) |
+| Inherits | [Wong Design System v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/04-design/wong-design-system-v1.md), [Wong Language System v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/03-language/wong-language-system-v1.md) |
+| Related product sources | [Priority Policy](../product/priority-policy-v1.md), [Product architecture](../architecture/product-architecture-v1.md), [Data/state model](../architecture/data-state-model-v1.md) |
 
 ## Purpose and scope
 
-WDS v1 governs truthful presentation of Priority Policy results and correction controls. It does not claim a finished component library. The repository has a React/CSS mailbox workspace with keyboard focus, status announcements, responsive layouts, and reduced-motion CSS; it has no Priority Policy screen, tier component, collection envelope, or correction controls.
+This product specification defines how AI Email Organizer presents Priority Policy results and correction controls. It does not claim a finished component library. The repository has a React/CSS mailbox workspace with keyboard focus, status announcements, responsive layouts, and reduced-motion CSS; it has no Priority Policy screen, tier component, collection envelope, or correction controls.
 
-## Wong Studio design principles
+## Governance inheritance
 
-- **Truth before intelligence:** show exactly what was evaluated and what is not known.
-- **Explainability before automation:** show evidence and correction paths before prompting action.
-- **Trust before delight:** never trade a precise state for reassuring but unsupported copy.
-- **Calm before productivity:** use restrained hierarchy, density, and motion.
-- **Evidence before assumptions:** preserve `Unknown`, partial, stale, and unavailable distinctions.
+Company-wide design and language authority is maintained exclusively in Wong Studio. This specification inherits the approved [Wong Design System v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/04-design/wong-design-system-v1.md), [Design Principles](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/04-design/design-principles.md), [Accessibility Philosophy](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/04-design/accessibility-philosophy.md), and [Wong Language System v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/03-language/wong-language-system-v1.md) without restating or redefining them.
 
-These match the approved policy philosophy. WDS presents its output; it does not alter eligibility, tiers, reasons, or freshness.
+This document begins at the product boundary: components, layouts, interaction states, accessibility implementation, and Priority Policy presentation. It presents product-policy output; it does not alter eligibility, tiers, reasons, or freshness.
 
 ## Relationship to the policy and architecture
 
-PPV1 defines deterministic tiers, reasons, scope/envelope facts, state copy, corrections, and non-AI limits. The product architecture defines authoritative Gmail, normalized projections, authorization, and proposed evaluator/cache boundaries. WDS defines how those facts appear, including no success before authoritative confirmation. The Attention Contract is the minimum information contract; WDS must not omit or reinterpret it.
+PPV1 exclusively defines deterministic `tier`, `reasonCode`, canonical `reason`, determining/supporting behavior, Provider Star and Manual Star semantics, `threadId`, Provider Binding, scope/envelope facts, state copy, corrections, and non-AI limits. The product architecture defines authoritative Gmail, normalized projections, authorization, and evaluator/cache boundaries. This interface specification defines only how approved facts appear, including no success before authoritative confirmation. The Attention Contract is the minimum information contract; the interface must not omit or reinterpret it.
 
 ## Information hierarchy and supported visual baseline
 
-Existing CSS uses an Inter/system UI stack, 12–26px type, muted neutral surfaces, blue/violet accents, focus outlines, a 264px desktop sidebar, responsive single-column behavior, and reduced motion. Those are observed implementation details, not approved WDS tokens. **Proposed architecture:** establish versioned tokens, semantic colors, spacing scale, density modes, and component specifications only after Founder/design approval.
+Existing CSS uses an Inter/system UI stack, 12–26px type, muted neutral surfaces, blue/violet accents, focus outlines, a 264px desktop sidebar, responsive single-column behavior, and reduced motion. Those are observed implementation details, not approved product tokens. **Proposed architecture:** establish versioned product tokens, semantic colors, spacing scale, density modes, and component specifications only after product design approval.
 
 For a priority collection, hierarchy should be: (1) scope and state qualification; (2) tier label; (3) tier-determining evidence; (4) supporting evidence, clearly subordinate; (5) correction/control status; (6) freshness and coverage facts. F01 is approved by PPV1-019: retain all applicable authorized affirmative evidence reasons, active explicit correction reasons, and lower-tier supporting reasons when a higher tier wins, but never present supporting reasons as tier-determining.
 
 ## Tier, reason, and correction presentation
 
-Use only PPV1-038 canonical tier labels and approved PPV1-017A reason wording when it exists. A tier’s evidence area must distinguish `tier-determining` from `supporting`; empty reasons use PPV1-036, not invented explanation. Never call a tier objective importance, urgency, or a final decision.
+Use only PPV1-038 canonical tier labels, PPV1-017A canonical `reason` wording, and PPV1-019 `DETERMINING` or `SUPPORTING` roles. Empty reasons use PPV1-036, not invented explanation. Never call a tier objective importance, urgency, or a final decision.
 
-**Correction-dominant results:** PPV1-027 resolves the inverse interaction. When an authoritative active correction fixes a tier, place that correction reason first, label it as the user's explicit choice, and retain applicable ordinary-rule evidence as visually separate supporting reasons. Thus, when Not Important fixes `NO_IMMEDIATE_SIGNALS`, an applicable Manual Star remains `MANUAL_STAR` supporting evidence; it does not determine or raise the final tier. The constitutional behavior is approved, while the executable component contract and verification are **Not yet implemented**.
+**Correction-dominant results:** Present the ordered canonical result and determining/supporting roles supplied under PPV1-017A through PPV1-019 and PPV1-027. The interface shall not restate, recompute, or paraphrase the policy semantics. The executable component contract and verification are **Not yet implemented**.
+
+Priority routes, selection state, correction controls, Undo, and evaluation presentation use the application `threadId`. Provider identifiers are not interface identity. Provider Binding is an architectural mechanism and is not exposed as user-facing semantics.
 
 Controls are **Not yet implemented**: `Prioritize`, `Not Important`, and `Undo`. Each control needs pending, confirmed, failed, and `Unknown` states. Pending disables duplicate submission and announces work without claiming success. Confirmed requires durable authoritative transition; failed offers recovery; `Unknown` says confirmation is incomplete and must not be rendered as absence. Undo must be idempotent and never imply Gmail labels changed.
 
@@ -81,10 +80,10 @@ PPV1-044 and PPV1-045 require explanation-usefulness and calibrated-trust resear
 
 ## Known gaps and Founder decisions
 
-- Tier UI, correction components, tokens, localization keys/reason wording, envelope API, and AI Insight boundary UI are absent.
-- F01 supporting-reason retention and the correction-dominant inverse interaction are resolved by PPV1-012, PPV1-019, and PPV1-025–029; component implementation and verification remain outstanding.
-- F02: **The excessive-future-skew rule is approved. Within-tolerance behavior, strictly-beyond-tolerance Unknown classification, boundary inclusivity, disclosure, and recalculation semantics are defined. Only the exact numeric future-skew tolerance duration remains TODO (Founder Approval Required).**
-- PPV1-017A and any visual-token/component-system details not evidenced by code remain **TODO (Founder Approval Required)** or proposed.
+- Tier UI, correction components, product tokens, envelope API, and AI Insight boundary UI are not implemented.
+- WSF-008 through WSF-011 resolve the Priority Policy foundation. This specification references PPV1-010A, PPV1-011A, PPV1-017A, PPV1-022, and PPV1-024 rather than duplicating their semantics.
+- PPV1-017A fully defines the canonical localization keys, canonical reason wording, and explanations. This interface specification consumes those definitions without redefining them; component integration and verification remain outstanding.
+- Visual-token and component-system details not evidenced by code remain proposed product-design work and do not alter policy semantics.
 - Usability/accessibility release research has not been evidenced.
 
 ## Evaluation checklist
@@ -99,7 +98,7 @@ PPV1-044 and PPV1-045 require explanation-usefulness and calibrated-trust resear
 
 ## Traceability to Priority Policy
 
-| WDS requirement | PPV1 sections |
+| Interface requirement | PPV1 sections |
 | --- | --- |
 | truthful scope/envelope and states | PPV1-034–035, 039–040 |
 | tiers, reasons, precedence | PPV1-016–019, 025–027, 038 |
@@ -114,4 +113,4 @@ PPV1-044 and PPV1-045 require explanation-usefulness and calibrated-trust resear
 
 ## Claims Not Yet Supported by Source
 
-No repository evidence proves a WDS component library, PPV1 visual implementation, tokens, correction controls, collection envelopes, localization system, or AI Insight feature.
+No repository evidence proves an AI Email Organizer component library, PPV1 visual implementation, product tokens, correction controls, collection envelopes, localization system, or AI Insight feature.

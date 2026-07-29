@@ -6,19 +6,26 @@
 | --- | --- |
 | Status | Approved |
 | Version | 1.0 |
-| Owner | Wong Studio |
+| Owner | AI Email Organizer (Wong Studio product) |
 | Effective sprint | Sprint 1 |
-| Founder decision | FD-001 |
+| Product decisions | FD-001; WSF-008; WSF-009; WSF-010; WSF-011 |
+| Foundation status | Complete; ready for implementation |
 
-This document is the constitutional engineering source of truth for Priority Policy v1 and Attention Contract v1. Implementations must not infer, extend, or silently reinterpret unresolved policy. A section marked `TODO (Founder Approval Required)` is non-operative until the Founder approves a concrete replacement in this document.
+This document is the authoritative product-policy source for Priority Policy v1 and Attention Contract v1. Its authority is limited to AI Email Organizer product behavior. Implementations must not infer, extend, or silently reinterpret unresolved policy. A section marked `TODO (Founder Approval Required)` is non-operative until the Founder approves a concrete replacement in this document.
 
-## Constitutional Scope
+## Product Policy Scope
 
-This document defines the deterministic attention policy used by Wong Email.
+This document defines the deterministic attention policy used by AI Email Organizer.
 
 It intentionally excludes semantic interpretation, AI reasoning, provider-specific implementations, engineering optimizations, and implementation details unless explicitly stated.
 
-Its purpose is to establish constitutional guarantees that remain stable across implementations and providers.
+Its purpose is to establish product-policy guarantees that remain stable across implementations and providers.
+
+## Governance inheritance
+
+Priority Policy inherits the [Wong Studio Constitution v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/01-constitution/constitution-v1.md), [Repository Policy](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/01-constitution/repository-policy.md), [Engineering Principles](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/05-engineering/engineering-principles.md), [Trust Model](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/05-engineering/trust-model.md), and [AI Principles](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/05-engineering/ai-principles.md). Those company-wide sources are maintained exclusively in Wong Studio and are not redefined here.
+
+FD-001 is an AI Email Organizer product-policy approval record. It does not establish, amend, or supersede Wong Studio company-wide authority.
 
 ## Table of contents
 
@@ -56,13 +63,7 @@ The policy does not replace Gmail, modify Gmail's classifications, or decide on 
 
 ## 2. Philosophy
 
-All policy and implementation decisions must uphold these principles:
-
-- Truth before intelligence
-- Explainability before automation
-- Trust before delight
-- Calm before productivity
-- Evidence before assumptions
+Priority Policy inherits its company-wide principles from the [Wong Studio Constitution v1](https://github.com/RampleStealth/Wong-Studio/blob/v1.0.0/docs/01-constitution/constitution-v1.md). This document does not restate or redefine them.
 
 Priority Policy v1 is deterministic and non-AI. It may use only evidence explicitly authorized by this document. Missing evidence must remain missing; it must not be inferred.
 
@@ -84,9 +85,9 @@ The candidate set must be policy-scoped, owner-scoped, and described truthfully 
 
 The policy evaluates thread-level normalized metadata. Message bodies, snippets, attachment contents, and generated summaries are not candidate evidence.
 
-Constitutional candidate-scope decisions:
+Product-policy candidate-scope decisions:
 
-- **PPV1-001 — Eligible Gmail location:** Current Inbox membership defines constitutional location eligibility.
+- **PPV1-001 — Eligible Gmail location:** Current Inbox membership defines product-policy location eligibility.
 
   A thread is location-eligible when:
 
@@ -110,12 +111,12 @@ Constitutional candidate-scope decisions:
 
   This decision governs location eligibility only. Lookback duration, candidate timestamps, missing-label handling, synchronization readiness, and provider mappings remain governed by separate Founder decisions.
 
-  The constitutional policy consumes provider-neutral normalized location membership; Gmail-specific labels remain adapter concerns.
+  Priority Policy consumes provider-neutral normalized location membership; Gmail-specific labels remain adapter concerns.
 - **PPV1-002 — Maximum candidate count:** The policy defines no maximum candidate count. Implementations may batch, paginate, stream, parallelize, or otherwise optimize evaluation provided every eligible candidate remains eligible for deterministic evaluation.
   - **PPV1-002A — Time-to-first-result guarantee:** TODO (Founder Approval Required): Define the maximum permitted time before the first eligible deterministic result is available.
-  - **PPV1-002B — Candidate lookback duration:** Priority Policy v1 establishes no temporal lookback limit. Every thread satisfying PPV1-001 location eligibility remains constitutionally eligible regardless of age.
+  - **PPV1-002B — Candidate lookback duration:** Priority Policy v1 establishes no temporal lookback limit. Every thread satisfying PPV1-001 location eligibility remains eligible under this product policy regardless of age.
 
-    Priority Policy v1 defines no age-based eligibility cutoff and no maximum candidate count. Constitutional eligibility is determined independently of implementation strategy.
+    Priority Policy v1 defines no age-based eligibility cutoff and no maximum candidate count. Product-policy eligibility is determined independently of implementation strategy.
 
     Batching, pagination, streaming, parallelization, caching, and progressive delivery shall never redefine candidate eligibility.
 
@@ -146,7 +147,7 @@ Constitutional candidate-scope decisions:
 
 When an otherwise eligible candidate has no valid PPV1-003 candidate timestamp:
 
-1. **Candidate retention:** The candidate remains constitutionally eligible under PPV1-001 and PPV1-002B.
+1. **Candidate retention:** The candidate remains eligible under PPV1-001 and PPV1-002B.
 2. **Unknown temporal state:** The candidate timestamp remains missing. No replacement timestamp may be generated, inferred, copied, or synthesized. Prohibited substitutes include:
    - zero or epoch time;
    - `evaluatedAt`;
@@ -155,7 +156,7 @@ When an otherwise eligible candidate has no valid PPV1-003 candidate timestamp:
    - local insertion time;
    - local update time;
    - another unrelated timestamp.
-3. **Available evidence:** All other available approved constitutional rules continue to evaluate normally. A Manual Star may still assign `REVIEW_LATER`. Future approved user corrections may still apply.
+3. **Available evidence:** All other available approved product-policy rules continue to evaluate normally. A Provider Star may still assign `REVIEW_LATER`. Approved user corrections may still apply.
 4. **No temporal effect:** A missing candidate timestamp:
    - produces no Recency effect;
    - emits no `RECENCY` reason;
@@ -166,7 +167,7 @@ When an otherwise eligible candidate has no valid PPV1-003 candidate timestamp:
 5. **Ordering:** PPV1-023 remains the sole authority for deterministic placement of candidates with missing timestamps. PPV1-004A shall not resolve that ordering decision.
 6. **Truthful disclosure:** A collection containing one or more candidates with missing candidate timestamps shall disclose incomplete temporal evidence through the future PPV1-035 collection envelope. PPV1-035 remains responsible for the exact field names, shape, and serialization.
 
-Tier evaluation may remain constitutionally valid when temporal evidence is incomplete. The disclosure communicates the limitation affecting temporal comparison and presentation; it does not imply that every tier result is invalid.
+Tier evaluation may remain valid under this product policy when temporal evidence is incomplete. The disclosure communicates the limitation affecting temporal comparison and presentation; it does not imply that every tier result is invalid.
 
 ### PPV1-004B — Missing sender
 
@@ -180,18 +181,18 @@ Priority Policy v1 adopts independent Unknown states for sender display name and
    - empty address as verified address;
    - guessed email addresses;
    - malformed provider values treated as normalized identity.
-4. **No constitutional evaluation effect:** Missing sender metadata:
+4. **No product-policy evaluation effect:** Missing sender metadata:
    - does not affect eligibility;
    - does not affect ordering;
    - does not assign or modify tiers;
    - emits no reasons;
    - provides no affirmative or negative evidence.
-5. **Presentation:** Presentation layers may display neutral interface text indicating unavailable sender information. Presentation fallback is interface copy only. It is not normalized sender identity, constitutional evidence, or provider metadata.
-6. **Collection disclosure:** Because sender is non-operative in Priority Policy v1, missing sender metadata requires no collection-level incomplete-evidence disclosure. Future sender-based constitutional rules remain governed by PPV1-015 and future amendments.
+5. **Presentation:** Presentation layers may display neutral interface text indicating unavailable sender information. Presentation fallback is interface copy only. It is not normalized sender identity, product-policy evidence, or provider metadata.
+6. **Collection disclosure:** Because sender is non-operative in Priority Policy v1, missing sender metadata requires no collection-level incomplete-evidence disclosure. Future sender-based product-policy rules remain governed by PPV1-015 and future amendments.
 
 ### PPV1-004C — Missing labels
 
-Priority Policy v1 adopts independent three-state knowledge for every normalized constitutional label concept:
+Priority Policy v1 adopts independent three-state knowledge for every normalized product-policy label concept:
 
 - verified present;
 - verified absent;
@@ -203,16 +204,16 @@ Priority Policy v1 adopts independent three-state knowledge for every normalized
    - `false`;
    - absent;
    - an empty label set;
-   - no Manual Star;
+   - no Provider Star;
    - no Inbox membership;
    - no future mapped provider signal.
-4. **Label-dependent rules:** A label-dependent rule evaluates only when its required label condition is verified. For Manual Star:
-   - verified present → apply PPV1-011 and emit `MANUAL_STAR`;
-   - verified absent → Manual Star does not apply;
-   - Unknown → do not evaluate Manual Star and emit no `MANUAL_STAR` reason.
+4. **Label-dependent rules:** A label-dependent rule evaluates only when its required label condition is verified. For Provider Star:
+   - verified present → apply PPV1-011 and emit `PROVIDER_STAR`;
+   - verified absent → Provider Star does not apply;
+   - Unknown → do not evaluate Provider Star and emit no `PROVIDER_STAR` reason.
 5. **Label-independent rules:** All approved rules that do not depend on unavailable label evidence continue to evaluate normally.
-6. **Default tier:** If no available approved rule assigns a higher tier, PPV1-009 may independently assign `NO_IMMEDIATE_SIGNALS`. That result shall not be represented as proof that Manual Star was absent when its state was Unknown.
-7. **Disclosure:** Because incomplete label metadata can prevent evaluation of an operative constitutional signal, a collection containing affected candidates shall disclose incomplete label evidence through PPV1-035. PPV1-035 remains responsible for the exact public field names, shape, and serialization.
+6. **Default tier:** If no available approved rule assigns a higher tier, PPV1-009 may independently assign `NO_IMMEDIATE_SIGNALS`. That result shall not be represented as proof that Provider Star was absent when its state was Unknown.
+7. **Disclosure:** Because incomplete label metadata can prevent evaluation of an operative product-policy signal, a collection containing affected candidates shall disclose incomplete label evidence through PPV1-035. PPV1-035 remains responsible for the exact public field names, shape, and serialization.
 8. **Recalculation:** When authoritative label metadata becomes available or changes, the candidate shall be reevaluated under the PPV1-031 trigger rules.
 
 PPV1-004C governs policy-evidence label availability after location eligibility has otherwise been established. It does not authorize synthesis of Inbox membership or any other provider mapping.
@@ -247,7 +248,7 @@ Priority Policy v1 adopts three-state knowledge for owner-scoped user-override m
    - override-dependent rules do not evaluate;
    - every approved override-independent rule continues to evaluate normally.
 6. **Default tier:** If no available approved rule assigns a higher tier, PPV1-009 may independently assign `NO_IMMEDIATE_SIGNALS`. That result shall not be represented as proof that no active user correction exists.
-7. **Disclosure:** Because Unknown override metadata may conceal the highest-authority constitutional input, a collection containing affected candidates shall disclose incomplete user-correction evidence through PPV1-035. PPV1-035 remains responsible for the exact public fields, shape, and serialization.
+7. **Disclosure:** Because Unknown override metadata may conceal the highest-authority product-policy input, a collection containing affected candidates shall disclose incomplete user-correction evidence through PPV1-035. PPV1-035 remains responsible for the exact public fields, shape, and serialization.
 8. **Recalculation:** When authoritative override state becomes available or changes, the candidate shall be reevaluated under PPV1-031.
 
 Tier evaluation may proceed from available evidence while override metadata is Unknown, but the result must remain truthfully qualified through collection-level disclosure.
@@ -278,7 +279,7 @@ Tier evaluation may proceed from available evidence while override metadata is U
      - the complete PPV1-001 candidate scope is represented at the authoritative checkpoint;
      - zero candidates satisfy that scope; and
      - applicable freshness and stale-presentation rules permit the snapshot to be presented as current.
-  2. **Constitutional meaning:** A synchronization-ready empty result means only:
+  2. **Product-policy meaning:** A synchronization-ready empty result means only:
 
      > No candidates satisfy the approved Priority Policy candidate scope in this synchronization-ready snapshot.
 
@@ -305,7 +306,7 @@ Tier evaluation may proceed from available evidence while override metadata is U
 
      - fabricated candidates;
      - synthetic reasons;
-     - transport-level absence as a substitute for constitutional state.
+     - transport-level absence as a substitute for product-policy state.
   6. **Presentation:** PPV1-039 remains responsible for exact user-facing wording for synchronization-ready empty, partial empty, stale, and unavailable states.
 
   The evaluator may deterministically return zero items for the exact inputs supplied. That fact alone does not prove complete candidate coverage or mailbox emptiness.
@@ -314,7 +315,7 @@ Candidate selection must be deterministic. Given the same normalized projection,
 
 ## 5. Priority tiers
 
-The constitutional tier identifiers are:
+The product-policy tier identifiers are:
 
 - `NEEDS_ATTENTION`
 - `REVIEW_LATER`
@@ -322,23 +323,23 @@ The constitutional tier identifiers are:
 
 - **PPV1-007 — Tier identifiers:** The identifiers above are the complete Priority Policy v1 tier registry. No implementation may introduce an additional tier under policy version `1.0`.
 - **PPV1-008 — Tier semantics:** Priority Policy v1 uses rule-assigned evidence semantics:
-  - `NEEDS_ATTENTION`: At least one approved constitutional rule explicitly assigns the candidate to the highest attention tier.
-  - `REVIEW_LATER`: At least one approved constitutional rule assigns the candidate for later review, and no applicable rule assigns `NEEDS_ATTENTION`.
-  - `NO_IMMEDIATE_SIGNALS`: No approved constitutional rule assigns either higher tier, subject to active user-correction rules.
+  - `NEEDS_ATTENTION`: At least one approved product-policy rule explicitly assigns the candidate to the highest attention tier.
+  - `REVIEW_LATER`: At least one approved product-policy rule assigns the candidate for later review, and no applicable rule assigns `NEEDS_ATTENTION`.
+  - `NO_IMMEDIATE_SIGNALS`: No approved product-policy rule assigns either higher tier, subject to active user-correction rules.
 
   These tiers express evidence-based attention guidance. They do not claim urgency, objective importance, certainty, or required action.
 
   PPV1-008 does not decide which signals map to which tiers. Signal mappings, combinations, correction mappings, and UI labels remain governed by their separate Founder decisions.
-- **PPV1-009 — Default tier:** When an eligible candidate has no affirmative constitutional signal and no active user correction, Priority Policy v1 shall assign:
+- **PPV1-009 — Default tier:** When an eligible candidate has no affirmative product-policy signal and no active user correction, Priority Policy v1 shall assign:
   - `tier`: `NO_IMMEDIATE_SIGNALS`
   - `reasonCodes`: `[]`
   - `reasons`: `[]`
 
-  `NO_IMMEDIATE_SIGNALS` does not mean unimportant, irrelevant, or safe to ignore. It means no approved constitutional rule currently assigns `REVIEW_LATER` or `NEEDS_ATTENTION`.
+  `NO_IMMEDIATE_SIGNALS` does not mean unimportant, irrelevant, or safe to ignore. It means no approved product-policy rule currently assigns `REVIEW_LATER` or `NEEDS_ATTENTION`.
 
   Eligible candidates shall not be omitted merely because they have no affirmative signal. Missing or unavailable metadata remains governed separately by PPV1-004 and must not be treated as equivalent to confirmed absence of evidence.
 
-Tier assignment must be deterministic. The engine must not emit confidence, inferred urgency, or an unapproved intermediate tier. PPV1-020 is authoritative for the constitutional ordering of the approved identifiers.
+Tier assignment must be deterministic. The engine must not emit confidence, inferred urgency, or an unapproved intermediate tier. PPV1-020 is authoritative for the product-policy ordering of the approved identifiers.
 
 ## 6. Deterministic rule set
 
@@ -352,44 +353,58 @@ Available normalized evidence includes:
 - thread-level attachment presence
 - owner-scoped user override metadata when that contract is implemented
 
-Availability does not authorize a field as a ranking signal. The exact operative rules remain unresolved:
+Availability does not authorize a field as a ranking signal.
 
-- **PPV1-010 — Remaining signal decisions:** TODO (Founder Approval Required): Identify which available metadata fields other than Manual user star and Recency are operative Priority Policy v1 signals.
-- **PPV1-010A — Provider-Verifiable Signal Origin:** Every approved signal must have a provider-verifiable origin. Signals whose origin cannot be distinguished from provider inference or AI classification are not constitutional inputs to Priority Policy.
-- **PPV1-011 — Rule-to-tier mapping:** Individual constitutional signals map as follows:
-  - **Provider-verifiable Manual Star**
+- **PPV1-010 — Operative Priority Policy v1 signals:** The complete ordinary-signal set currently operative in Priority Policy v1 is Provider Star and the temporal evidence used by the approved Recency ordering rules. `UNREAD`, provider importance, sender or recipient identity, attachment presence, provider categories, and all other available metadata are non-operative unless a later Founder-approved policy amendment explicitly authorizes them.
+- **PPV1-010A — Provider evidence origin and star provenance:** Every approved provider-backed signal must have a provider-verifiable origin. Gmail `STARRED` evidence authorizes only the provider-neutral Provider Star state defined in PPV1-011 and PPV1-011A. It does not prove who applied the star, how it was applied, or whether it was applied manually. Gmail History, Gmail Filters, synchronization order, and current label state shall not be used to infer Manual Star provenance. Manual Star exists only when AI Email Organizer records an explicit owner action and receives provider confirmation for that action. Priority Policy v1 has no operative Manual Star input when that complete evidence chain is unavailable.
+- **PPV1-011 — Rule-to-tier mapping:** Individual product-policy signals map as follows:
+  - **Provider Star**
     - `tier`: `REVIEW_LATER`
-    - `reasonCode`: `MANUAL_STAR`
+    - `reasonCode`: `PROVIDER_STAR`
 
-    A Manual Star is explicit, user-verifiable intent that the candidate should remain visible for review. A Manual Star does not necessarily mean urgency, immediate action, or a request to begin with that candidate. Therefore, Manual Star elevates the candidate above `NO_IMMEDIATE_SIGNALS` but does not independently assign `NEEDS_ATTENTION`.
+    Provider Star means only that the provider authoritatively reports a starred state for the candidate. It does not establish manual provenance, urgency, objective importance, or required action. Provider Star elevates the candidate above `NO_IMMEDIATE_SIGNALS` but does not independently assign `NEEDS_ATTENTION`.
   - **Recency alone**
     - `tier`: `NO_IMMEDIATE_SIGNALS`
     - `reasonCodes`: `[]`
     - `reasons`: `[]`
 
-    Recency tells time, not importance. Recency alone does not promote a tier and does not constitute a reason for the assigned tier. Recency may be used only as a deterministic ordering rule among otherwise constitutionally equal candidates.
+    Recency tells time, not importance. Recency alone does not promote a tier and does not constitute a reason for the assigned tier. Recency may be used only as a deterministic ordering rule among candidates that are otherwise equal under this product policy.
 
-  Do not emit `RECENCY` merely because a valid timestamp exists. The `RECENCY` reason code remains registered but inactive unless a future Founder-approved rule gives it an explanatory constitutional condition.
+  Do not emit `RECENCY` merely because a valid timestamp exists. The `RECENCY` reason code remains registered but inactive unless a future Founder-approved rule gives it an explanatory product-policy condition.
 
   `NEEDS_ATTENTION` remains available for explicit correction mappings or other future Founder-approved rules. This decision does not resolve corrections, missing metadata, or provider-specific mappings.
 - **PPV1-012 — Combined-signal behavior:** Highest assigned tier wins, with no combinational promotion.
-  1. **Individual rule evaluation:** Each applicable approved constitutional rule evaluates independently and may produce only its Founder-approved tier assignment and authorized reason.
+  1. **Individual rule evaluation:** Each applicable approved product-policy rule evaluates independently and may produce only its Founder-approved tier assignment and authorized reason.
   2. **Correction handling:** Active user corrections are resolved under PPV1-025 through PPV1-027 before ordinary rule conflict resolution.
-  3. **Final tier assignment:** PPV1-027 determines whether exactly one verified active correction fixes the final tier. When authoritative correction state confirms that no active correction exists, the final tier is the constitutionally highest tier actually assigned by an applicable approved ordinary rule.
-  4. **No accumulation:** Multiple signals shall not accumulate, add weight, or combine into a higher tier merely because they coexist. A combination may produce a distinct or higher tier only when a separate Founder-approved constitutional combination rule explicitly assigns that outcome.
+  3. **Final tier assignment:** PPV1-027 determines whether exactly one verified active correction fixes the final tier. When authoritative correction state confirms that no active correction exists, the final tier is the highest tier actually assigned by an applicable ordinary rule under this product policy.
+  4. **No accumulation:** Multiple signals shall not accumulate, add weight, or combine into a higher tier merely because they coexist. A combination may produce a distinct or higher tier only when a separate Founder-approved product-policy combination rule explicitly assigns that outcome.
   5. **Reasons:** Reasons remain governed by PPV1-018 and PPV1-019. PPV1-019 determines the visibility of lower-tier supporting reasons in a higher-tier result.
 
   Current approved example:
 
-  - Manual Star plus Recency:
+  - Provider Star plus Recency:
     - `tier`: `REVIEW_LATER`
-    - `reasonCodes`: [`MANUAL_STAR`]
+    - `reasonCodes`: [`PROVIDER_STAR`]
 
-  `RECENCY` remains inactive and is not emitted. Recency may still order otherwise constitutionally equal candidates.
+  `RECENCY` remains inactive and is not emitted. Recency may still order candidates that are otherwise equal under this product policy.
 
   The policy shall not use scores, weights, confidence values, probabilistic ranking, or inferred promotion.
 - **PPV1-014 — Attachment treatment:** TODO (Founder Approval Required): State explicitly whether attachment presence affects Priority Policy v1 or is projection metadata only.
 - **PPV1-015 — Sender and recipient treatment:** TODO (Founder Approval Required): State explicitly whether normalized addresses affect Priority Policy v1 or are projection metadata only.
+
+### PPV1-011A — Provider Star evidence mapping
+
+Provider Star is a provider-neutral three-state input:
+
+1. **Verified present:** For Gmail, Provider Star is verified present when a successfully synchronized authoritative Gmail thread snapshot contains at least one message with the `STARRED` system label.
+2. **Verified absent:** For Gmail, Provider Star is verified absent only when synchronization successfully establishes the complete authoritative message set for the thread and none of those messages contains the `STARRED` system label.
+3. **Unknown:** Provider Star is Unknown when label synchronization, thread hydration, message coverage, provider access, or evidence validation is incomplete, failed, malformed, unavailable, or ambiguous.
+4. **Fallback:** Unknown does not become verified absence, Manual Star, or any inferred user intent. PPV1-011 does not evaluate and `PROVIDER_STAR` is not emitted. Other independent rules continue to evaluate, and PPV1-035 discloses incomplete label evidence.
+5. **History and filters:** Gmail History may report label transitions and Gmail Filters may describe configured actions, but neither proves that the owner manually starred a thread. They shall not upgrade Provider Star to Manual Star.
+6. **Synchronization:** A later authoritative snapshot may change Provider Star among verified present, verified absent, and Unknown. PPV1-031 requires reevaluation after a confirmed change.
+7. **Replay:** Evaluation records preserve the normalized Provider Star state and evidence-snapshot identity used at `evaluatedAt`. Replay does not query current Gmail state and does not reconstruct provenance.
+8. **Reason eligibility:** Verified-present Provider Star may emit `PROVIDER_STAR` as a determining reason when PPV1-011 assigns the final tier. It remains eligible as a supporting reason when another authoritative rule or correction determines the final tier. Verified-absent and Unknown states emit no Provider Star reason.
+9. **Founder ruling:** WSF-009 is the approval authority for Provider Star, the Manual Star truth boundary, and the Gmail mapping above.
 
 The engine must not:
 
@@ -406,24 +421,25 @@ The caller must supply a fixed `evaluatedAt` instant. Identical policy inputs, i
 
 #### Approved signals
 
-| Signal | Founder Status | Constitutional Basis |
+| Signal | Founder status | Sole semantic authority |
 | --- | --- | --- |
-| Manual user star | Approved | A manually applied star is an explicit user action and therefore satisfies the constitutional requirements of objective, deterministic, and user-verifiable evidence. |
-| Recency | Approved | Recency provides objective temporal context. It does not represent importance and cannot promote a tier by itself. |
+| Provider Star | Approved | PPV1-010A, PPV1-011, and PPV1-011A |
+| Manual Star | Not operative in PPV1 | PPV1-010A and PPV1-011A |
+| Recency | Approved for timestamp ordering; no reason emission | PPV1-013 through PPV1-013D and PPV1-021 through PPV1-024 |
 
-The individual tier mappings are governed by PPV1-011. Combined-signal behavior, canonical human-readable wording, and Recency parameter values remain governed by PPV1-012, PPV1-017A, and the unresolved Recency parameters below.
+The individual tier mappings are governed by PPV1-011. Combined-signal behavior and canonical human-readable wording are governed by PPV1-012 and PPV1-017A. Unresolved future Recency-window parameters do not alter the approved timestamp ordering or WSF-008 future-skew tolerance.
 
 #### Not approved signals
 
-| Signal | Founder Status | Constitutional Boundary |
+| Signal | Founder status | Sole semantic authority |
 | --- | --- | --- |
-| Manual/provider importance | Not Approved | A provider importance signal is approved only if its origin can be verified as an explicit user action. If the implementation cannot distinguish user-applied importance from provider-generated importance, the signal shall not participate in Priority Policy. |
+| Provider importance | Not approved | PPV1-010 |
 
 ### 6.2 Recency
 
-- **PPV1-013 — Constitutional role of Recency:** Recency is an approved deterministic signal. Its purpose is to provide objective temporal context. Recency does not represent importance.
+- **PPV1-013 — Product-policy role of Recency:** Recency is an approved deterministic signal. Its purpose is to provide objective temporal context. Recency does not represent importance.
 - **PPV1-013A — Recency Represents Time:** Recency tells time, not importance. Priority Policy shall treat recency solely as objective temporal evidence. Importance shall never be inferred from recency alone.
-- **PPV1-013B — No Tier Promotion:** Recency alone shall never increase an email's Priority Policy tier. It may participate only according to the deterministic constitutional rules.
+- **PPV1-013B — No Tier Promotion:** Recency alone shall never increase an email's Priority Policy tier. It may participate only according to the deterministic product-policy rules.
 - **PPV1-013C — Explicit User Intent Dominance:** Explicit user actions always take precedence over passive metadata.
 
   Examples of explicit actions include:
@@ -440,31 +456,27 @@ The individual tier mappings are governed by PPV1-011. Combined-signal behavior,
 
   Passive metadata shall not override explicit user intent.
 
-- **PPV1-013D — Deterministic Ordering:** When two candidates are otherwise constitutionally equal, recency may be used solely as a deterministic ordering rule. It shall not create, modify, or elevate Priority Policy tiers.
+- **PPV1-013D — Deterministic Ordering:** When two candidates are otherwise equal under this product policy, recency may be used solely as a deterministic ordering rule. It shall not create, modify, or elevate Priority Policy tiers.
 
 #### Time and Importance
 
-Priority Policy separates objective temporal facts from constitutional attention decisions.
+Priority Policy separates objective temporal facts from product-policy attention decisions.
 
 Time describes when an event occurred.
 
 Importance is not inferred from time.
 
-Recency may provide temporal context and deterministic ordering only within the constitutional boundaries above.
+Recency may provide temporal context and deterministic ordering only within the product-policy boundaries above.
 
 **Recency parameter values:** TODO (Founder Approval Required): Define the Recency window, number of hours, lookback duration, and exact boundary semantics.
 
-Evaluation validity and cache retention are governed by PPV1-030 and PPV1-033. The Constitution defines the role of Recency before defining its unresolved parameter values.
+Evaluation validity and cache retention are governed by PPV1-030 and PPV1-033. This product policy defines the role of Recency before defining its unresolved parameter values.
 
-### 6.3 Provider Mapping
+### 6.3 Provider mapping boundary
 
-Priority Policy operates exclusively on provider-neutral normalized signals.
+Priority Policy operates exclusively on provider-neutral normalized signals. PPV1-010A and PPV1-011A are the sole product-policy authority for Provider Star, Manual Star provenance, Unknown handling, reason eligibility, and replay behavior.
 
-Provider-specific concepts such as Star, Flag, Category, and equivalent concepts must be translated by provider adapters. The constitutional policy itself shall not depend on provider-specific terminology.
-
-The provider-neutral mapping contract will be defined in [`docs/product/provider-mapping-spec-v1.md`](provider-mapping-spec-v1.md).
-
-**TODO (Future Specification):** Create and approve `docs/product/provider-mapping-spec-v1.md`.
+Provider adapters own truthful translation of provider evidence into that approved contract. They do not define product semantics and shall not synthesize unavailable evidence.
 
 ### 6.4 AI Independence
 
@@ -472,7 +484,7 @@ No AI component may directly assign, modify, or reorder Priority Policy tiers.
 
 AI systems may produce recommendations, explanations, summaries, or future assistant suggestions.
 
-Priority Policy remains solely determined by constitutional deterministic rules.
+Priority Policy remains solely determined by product-policy deterministic rules.
 
 ## 7. Reason codes
 
@@ -480,47 +492,44 @@ Every affirmative policy conclusion must be explainable through stable, localiza
 
 ### PPV1-016 — Evidence-specific reason-code registry
 
-The constitutional reason-code registry is:
-
-| Reason code | Constitutional evidence | Emission dependency |
-| --- | --- | --- |
-| `USER_PRIORITIZE` | Active Prioritize correction | PPV1-025 |
-| `USER_NOT_IMPORTANT` | Active Not Important correction | PPV1-026 |
-| `MANUAL_STAR` | Provider-verifiable Manual Star | PPV1-011 |
-| `RECENCY` | Objective temporal context | Inactive unless a future Founder-approved rule defines an explanatory constitutional condition |
-
-Reason codes identify approved constitutional evidence. They shall never infer importance, urgency, confidence, or AI judgment.
-
-Registration does not authorize emission before the referenced constitutional condition is approved.
+PPV1-017A is the complete canonical `reasonCode` registry for Priority Policy v1. No code outside that registry may be emitted under `policyVersion` `1.0`. A registered `reasonCode` identifies only its approved product-policy evidence and shall never infer importance, urgency, confidence, or AI judgment. Registration does not authorize emission unless the registry's referenced product-policy condition is satisfied.
 
 ### PPV1-017 — Human-readable reason representation
 
-Each reason shall define:
+Each reason defines one stable localization key, one canonical display wording, and one canonical explanation. The evaluation contract's `reasons` field uses the canonical display wording exactly. No implementation may generate, paraphrase, or infer reason text.
 
-- a stable localization key;
-- canonical Founder-approved English wording.
+This product policy owns semantic meaning and the canonical English registry. Presentation layers may localize approved keys but shall not reinterpret product-policy meaning.
 
-The Constitution owns semantic meaning. Presentation layers may localize the wording but shall not reinterpret constitutional meaning.
+### PPV1-017A — Canonical reason registry
 
-- **PPV1-017A — Localization keys and canonical English wording:** TODO (Founder Approval Required): Approve the exact stable localization key and canonical English wording for each reason code in PPV1-016.
+| `reasonCode` | Localization key | Canonical `reason` | Canonical explanation | Determining behavior | Supporting behavior | Prohibited appearance |
+| --- | --- | --- | --- | --- | --- | --- |
+| `USER_PRIORITIZE` | `priority.reason.user_prioritize` | You prioritized this conversation. | You chose to place this conversation in Needs attention. | Determines `NEEDS_ATTENTION` whenever the authoritative Prioritize correction is active. | Never supporting while active; the correction fixes the final tier. | Without one authoritative active Prioritize correction, after confirmed Undo, or from provider metadata, inference, AI, or heuristics. |
+| `USER_NOT_IMPORTANT` | `priority.reason.user_not_important` | You marked this conversation as not important. | You chose to place this conversation in No immediate signals. | Determines `NO_IMMEDIATE_SIGNALS` whenever the authoritative Not Important correction is active. | Never supporting while active; the correction fixes the final tier. | Without one authoritative active Not Important correction, after confirmed Undo, or from missing signals, provider metadata, inference, AI, or heuristics. |
+| `PROVIDER_STAR` | `priority.reason.provider_star` | Starred in your email provider. | Your email provider reports that this conversation is starred. | Determines `REVIEW_LATER` when Provider Star is verified present and no active correction fixes the final tier. | Remains supporting when an active correction or another approved higher-authority rule determines the final tier. | When Provider Star is verified absent or Unknown; as proof of Manual Star, importance, urgency, or required action; or from inferred provenance. |
+| `RECENCY` | `priority.reason.recency` | Received recently. | The verified timestamp satisfies an approved Recency explanation rule. | None in Priority Policy v1. | None in Priority Policy v1. | Always prohibited in Priority Policy v1; registration does not authorize emission until a later Founder-approved rule activates it. |
+
+Canonical wording is immutable within `policyVersion` `1.0`. A wording change requires a new policy-version compatibility decision.
+
+WSF-010 is the approval authority for the complete canonical registry above.
 
 ### PPV1-018 — Reason precedence
 
-When simultaneous reasons are emitted, they shall be returned in this constitutional precedence:
+When simultaneous reasons are emitted, they shall be returned in this product-policy precedence:
 
 1. Active User Correction
-2. Manual Star
+2. Provider Star
 3. Recency
 
 The applicable Active User Correction reason or reasons are governed by PPV1-025 through PPV1-029.
 
-This ordering preserves the constitutional rule that explicit user intent outranks passive metadata.
+This ordering preserves the product-policy rule that explicit user intent outranks passive metadata.
 
 ### PPV1-019 — Negative reasons
 
 Priority Policy v1 shall retain all applicable authorized affirmative evidence reasons and all active explicit user-correction reasons, including lower-tier supporting reasons, even when another rule determines the final tier.
 
-1. **Affirmative evidence:** An authorized reason may be emitted only when its Founder-approved constitutional condition is satisfied.
+1. **Affirmative evidence:** An authorized reason may be emitted only when its Founder-approved product-policy condition is satisfied.
 2. **Explicit corrections:** An explicit user-correction reason may be emitted only under the approved mapping, active-state semantics, precedence, lifetime, and Undo behavior in PPV1-025 through PPV1-029. Canonical human-readable wording remains governed by PPV1-017A.
 3. **Supporting reasons:** A reason associated with a lower individually assigned tier may remain visible when a higher tier wins. Supporting reasons must not be represented as though each one independently determined the final tier.
 4. **Prohibited negative inference:** Never emit reasons inferred from absent signals or passive negative conclusions. Prohibited examples include:
@@ -533,6 +542,9 @@ Priority Policy v1 shall retain all applicable authorized affirmative evidence r
    Absence of evidence shall not become negative evidence.
 5. **Ordering and deduplication:** Reasons shall be deduplicated and ordered under PPV1-018.
 6. **Recency:** `RECENCY` remains registered but inactive and shall not be emitted under the currently approved policy.
+7. **Determining reason:** A determining reason is an emitted reason whose approved rule or active correction fixed the final `tier`.
+8. **Supporting reason:** A supporting reason is an emitted authorized reason whose evidence applied but did not fix the final `tier`.
+9. **Canonical role values:** The evaluation contract represents those roles only as `DETERMINING` and `SUPPORTING`. A supporting reason shall never be labeled or presented as determining.
 
 Implementations must not derive user-facing text from enum names. Codes and wording are separate contract fields.
 
@@ -540,12 +552,12 @@ Implementations must not derive user-facing text from enum names. Codes and word
 
 Candidate ordering must be stable and fully deterministic. Database row order, provider response order, object-property order, locale defaults, and asynchronous completion order must never affect the result.
 
-- **PPV1-020 — Tier ordering:** Priority Policy v1 adopts the following strict descending constitutional tier order:
+- **PPV1-020 — Tier ordering:** Priority Policy v1 adopts the following strict descending product-policy tier order:
   1. `NEEDS_ATTENTION`
   2. `REVIEW_LATER`
   3. `NO_IMMEDIATE_SIGNALS`
 
-  1. **Tier ordering:** The above order is the sole constitutional ordering of approved tiers. No implementation shall derive ordering from:
+  1. **Tier ordering:** The above order is the sole product-policy ordering of approved tiers. No implementation shall derive ordering from:
      - declaration order;
      - enum values;
      - numeric values;
@@ -554,11 +566,11 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
      - confidence;
      - heuristics;
      - implementation-specific ordering.
-  2. **Conflict resolution:** After individual rule evaluation and correction handling under PPV1-025 through PPV1-027, PPV1-012 shall select the highest ordinary-rule tier according to this constitutional order only when no verified active correction fixes the final tier.
-  3. **No accumulation:** Multiple assigned tiers shall never accumulate or promote beyond the highest tier actually assigned by an approved constitutional rule.
-  4. **Collection grouping:** Primary collection grouping shall follow this constitutional tier order. Candidates within the same final tier remain governed exclusively by PPV1-021.
+  2. **Conflict resolution:** After individual rule evaluation and correction handling under PPV1-025 through PPV1-027, PPV1-012 shall select the highest ordinary-rule tier according to this product-policy order only when no verified active correction fixes the final tier.
+  3. **No accumulation:** Multiple assigned tiers shall never accumulate or promote beyond the highest tier actually assigned by an approved product-policy rule.
+  4. **Collection grouping:** Primary collection grouping shall follow this product-policy tier order. Candidates within the same final tier remain governed exclusively by PPV1-021.
   5. **Separation of concerns:** This ordering governs only:
-     - constitutional tier ordering;
+     - product-policy tier ordering;
      - final-tier conflict resolution;
      - primary collection grouping.
 
@@ -572,7 +584,7 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
      - certainty;
      - confidence;
      - required action.
-  6. **Future compatibility:** Any future Founder-approved tier shall require explicit placement within the constitutional ordering before implementation.
+  6. **Future compatibility:** Any future Founder-approved tier shall require explicit placement within the product-policy ordering before implementation.
 
   This ordering makes the approved tier semantics executable. It does not redefine those semantics.
 - **PPV1-021 — Within-tier comparator:** Priority Policy v1 adopts the following lexicographic within-tier comparator. This comparator applies only after final tier assignment and primary tier grouping under PPV1-020.
@@ -604,13 +616,13 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
      - weights;
      - confidence;
      - AI inference.
-  6. **Constitutional boundaries:** The within-tier comparator:
+  6. **Product-policy boundaries:** The within-tier comparator:
      - does not affect eligibility;
      - does not assign or change tiers;
      - does not create reasons;
      - does not alter rule precedence;
      - does not imply importance, urgency, or required action.
-  7. **Deterministic replay:** Identical constitutional candidate inputs and an identical `evaluatedAt` shall produce identical ordering.
+  7. **Deterministic replay:** Identical product-policy candidate inputs and an identical `evaluatedAt` shall produce identical ordering.
 
   PPV1-024 remains responsible for excessive future-skew policy. This decision applies only the already approved age-zero treatment to the ordering comparison key and does not resolve PPV1-024's remaining behavior.
 - **PPV1-022 — Final identity tie-breaker:** Priority Policy v1 uses the immutable owner-scoped application `threadId` as the final non-semantic tie-breaker.
@@ -618,7 +630,9 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
   1. **Identity:** `threadId` shall be:
      - application-owned;
      - owner-scoped;
-     - immutable for the lifetime of the logical thread projection;
+     - an opaque UUID generated exactly once;
+     - immutable for the lifetime of the logical application thread;
+     - permanently non-reassignable;
      - provider-neutral;
      - distinct from any raw provider identifier.
   2. **Comparator:** Compare `threadId` values using their canonical UUID 16-byte representation in unsigned ascending byte order. The implementation shall not use:
@@ -631,7 +645,7 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
      - database row order;
      - runtime iteration order.
   3. **Comparator position:** The `threadId` comparator runs only after PPV1-020 tier ordering and every preceding PPV1-021 within-tier comparison are equal.
-  4. **No semantic meaning:** The `threadId` value carries no constitutional or user-facing meaning. It shall not affect:
+  4. **No semantic meaning:** The `threadId` value carries no product-policy or user-facing meaning. It shall not affect:
      - eligibility;
      - tier assignment;
      - reasons;
@@ -639,14 +653,25 @@ Candidate ordering must be stable and fully deterministic. Database row order, p
      - timestamp ordering;
      - importance;
      - urgency.
-  5. **Stability:** The application shall preserve the same owner-scoped `threadId` across ordinary synchronization and projection updates.
-  6. **Invalid input:** An absent or malformed constitutional `threadId` is invalid evaluator input. The evaluator shall fail safely. It shall not:
+  5. **Stability:** The application shall preserve the same owner-scoped `threadId` across synchronization retries, metadata changes, projection updates or rebuilds, provider unavailability, application restarts, replay, and storage migrations.
+  6. **Invalid input:** An absent or malformed product-policy `threadId` is invalid evaluator input. The evaluator shall fail safely. It shall not:
      - generate a replacement UUID;
      - fall back to a provider ID;
      - derive an identity from sender or subject;
      - use database or runtime ordering.
+  7. **Owner and mailbox isolation:** Every lookup, evaluation, correction, Undo, replay, API operation, and Provider Binding resolution shall bind the authenticated owner, mailbox, and `threadId`. Possession of a valid UUID is not authorization. A `threadId` shall never resolve or appear across owner or mailbox boundaries.
+  8. **Provider Binding:** A Provider Binding is the application-owned, durable association between one `threadId` and a provider locator within an authenticated owner and mailbox scope. Provider locators remain provider-owned facts. They shall not become product identity, evaluator identity, correction identity, replay identity, or Priority API identity.
+  9. **Binding uniqueness and provenance:** One provider locator within an owner and mailbox scope shall resolve to exactly one `threadId`. Equivalence shall not be inferred from subject, participants, sender, recipients, timestamps, content, labels, similarity, AI output, synchronization order, or database order.
+  10. **Projection lifecycle:** Deleting or rebuilding mutable projection data shall not delete, replace, or reassign the canonical `threadId` or its retained Provider Binding. If the same authoritative provider locator reappears in the same retained mailbox scope, it resolves to the existing `threadId`.
+  11. **Corrections:** Every correction and correction-history record attaches immutably to the authenticated owner, mailbox, and canonical `threadId`. Correction transitions and Undo change correction state, not thread attachment. Provider changes, temporary ineligibility, or projection rebuild shall not move a correction to another identity.
+  12. **Replay:** Every retained evaluation run records the canonical `threadId` and the Provider Binding transition identity applicable to its evidence snapshot. Replay uses stored identity facts and shall not query current provider state or reconstruct identity from current metadata.
+  13. **Provider removal and reconnect:** Removing or disconnecting a provider suspends or retires its binding without reassigning `threadId`. Reconnecting the same durable provider account and mailbox reuses the existing binding and identity.
+  14. **Provider replacement:** A replacement provider locator may attach to an existing `threadId` only through an explicit authenticated and auditable transition naming that `threadId`. Without that transition, the provider thread receives a new `threadId`, and corrections do not transfer.
+  15. **Migration:** Existing valid application thread UUIDs become the canonical `threadId` values. Migration shall preserve them and establish their Provider Bindings without reallocation. Duplicate, malformed, cross-owner, cross-mailbox, or conflicting mappings shall fail safely and require explicit repair; migration order shall not choose a winner.
+  16. **Retirement and erasure:** While any correction, evaluation, audit, or replay artifact is retained, its `threadId` attachment remains unchanged. A retired or erased UUID shall never be reassigned to another logical thread. Retention duration and authorized erasure remain governed by their applicable operational authority.
+  17. **Founder ruling:** WSF-011 is the approval authority for the canonical application identity and Provider Binding lifecycle defined above.
 
-  PPV1-022 exists solely to complete a deterministic total order when all higher-order constitutional comparators are equal.
+  PPV1-022 exists solely to complete a deterministic total order when all higher-order product-policy comparators are equal.
 - **PPV1-023 — Missing timestamp ordering:** Priority Policy v1 requires candidates with verified PPV1-003 timestamps to appear before candidates with Unknown timestamps within the same final tier.
 
   1. **Tier authority:** PPV1-020 tier grouping remains the primary collection order. Timestamp availability shall never move a candidate across tiers.
@@ -685,10 +710,10 @@ The evaluator must not rewrite the persisted provider timestamp and must not use
 
 - **PPV1-024 — Excessive future skew:** Priority Policy v1 defines a single explicit future-skew tolerance parameter.
 
-  **Future-skew tolerance duration:** TODO (Founder Approval Required): Approve the exact duration. The implementation shall not invent, default, or hard-code a duration before that approval.
+  **Future-skew tolerance duration:** 5 minutes.
 
   1. **Within tolerance:** A valid provider-confirmed candidate timestamp later than `evaluatedAt` but not beyond the approved future-skew tolerance remains valid temporal evidence. For PPV1-021 ordering, its effective timestamp is `evaluatedAt`. The original provider timestamp remains unchanged.
-  2. **Beyond tolerance:** A candidate timestamp strictly later than `evaluatedAt` plus the approved tolerance is excessive future skew. For constitutional temporal evaluation, it becomes Unknown.
+  2. **Beyond tolerance:** A candidate timestamp strictly later than `evaluatedAt` plus the approved tolerance is excessive future skew. For product-policy temporal evaluation, it becomes Unknown.
   3. **Candidate behavior:** Excessive future skew:
      - does not affect eligibility;
      - does not assign or change a tier;
@@ -701,11 +726,11 @@ The evaluator must not rewrite the persisted provider timestamp and must not use
      - `evaluatedAt` advances;
      - provider timestamp metadata changes; or
      - the approved tolerance changes in a future policy version.
-  6. **Boundary semantics:** Once the duration is approved:
-     - timestamps at exactly `evaluatedAt` plus the tolerance remain valid;
+  6. **Boundary semantics:**
+     - timestamps at exactly `evaluatedAt` plus 5 minutes remain valid;
      - timestamps strictly beyond that boundary become Unknown.
-
-  The constitutional excessive-future-skew rule is approved. The exact future-skew tolerance duration remains unresolved and must not be inferred.
+  7. **Canonical parameter:** The duration is the immutable PPV1 parameter `futureSkewTolerance = PT5M`. Implementations shall not substitute a configurable, provider-specific, or locally selected value under `policyVersion` `1.0`.
+  8. **Founder ruling:** WSF-008 is the approval authority for the numeric duration. All other behavior in PPV1-024 remains unchanged.
 
 ## 10. User overrides
 
@@ -727,7 +752,7 @@ Corrections must be:
 - independent of Gmail labels;
 - applied without silently mutating Gmail.
 
-The persistence and product workflow for corrections are outside the current implementation task. Constitutional correction behavior is defined below:
+The persistence and product workflow for corrections are outside the current implementation task. Product-policy correction behavior is defined below:
 
 - **PPV1-025 — Prioritize mapping:** Priority Policy v1 maps a verified active Prioritize correction to:
   - `tier`: `NEEDS_ATTENTION`
@@ -739,12 +764,12 @@ The persistence and product workflow for corrections are outside the current imp
      - urgency;
      - certainty;
      - required action;
-     - independent constitutional evidence.
+     - independent product-policy evidence.
   3. **Reason:** `USER_PRIORITIZE` becomes operative only when an active verified Prioritize correction exists. It shall not be emitted from inference, prediction, heuristics, or provider metadata.
   4. **Interaction:** Conflict resolution remains governed by PPV1-027. Lifetime remains governed by PPV1-028. Undo remains governed by PPV1-029. Localization and canonical wording remain governed by PPV1-017A.
   5. **Reevaluation:** PPV1-031 shall require reevaluation whenever a Prioritize correction becomes active, changes, or is removed.
 
-  `NEEDS_ATTENTION` in this case results solely from the user's explicit correction and shall not be interpreted as confirmation of any underlying constitutional signal.
+  `NEEDS_ATTENTION` in this case results solely from the user's explicit correction and shall not be interpreted as confirmation of any underlying product-policy signal.
 - **PPV1-026 — Not Important mapping:** Priority Policy v1 maps a verified active Not Important correction to:
   - `tier`: `NO_IMMEDIATE_SIGNALS`
   - `reasonCode`: `USER_NOT_IMPORTANT`
@@ -764,7 +789,7 @@ The persistence and product workflow for corrections are outside the current imp
      - heuristics;
      - provider importance;
      - AI judgment.
-  4. **Conflict handling:** PPV1-027 remains responsible for conflicts involving Prioritize, Not Important, Manual Star, and ordinary constitutional signals. PPV1-026 approves the isolated mapping only.
+  4. **Conflict handling:** PPV1-027 remains responsible for conflicts involving Prioritize, Not Important, Provider Star, and ordinary product-policy signals. PPV1-026 approves the isolated mapping only.
   5. **Lifecycle:** PPV1-028 remains responsible for correction lifetime. PPV1-029 remains responsible for Undo semantics. PPV1-031 shall require reevaluation whenever the correction becomes active, changes, or becomes inactive through an approved transition.
   6. **Wording:** PPV1-017A remains responsible for the localization key and canonical Founder-approved English wording.
 
@@ -781,7 +806,7 @@ The persistence and product workflow for corrections are outside the current imp
        - emits `USER_NOT_IMPORTANT`.
 
      The correction-assigned tier is final while that correction remains active.
-  3. **Ordinary constitutional rules:** Ordinary rules continue evaluating so that all applicable authorized evidence remains truthfully available as supporting reasons. Ordinary rules shall not alter the correction-assigned final tier.
+  3. **Ordinary product-policy rules:** Ordinary rules continue evaluating so that all applicable authorized evidence remains truthfully available as supporting reasons. Ordinary rules shall not alter the correction-assigned final tier.
   4. **No verified active correction:** When authoritative correction state confirms that no active correction exists, ordinary rules determine the final tier under PPV1-012.
   5. **Conflicting or ambiguous correction state:** Correction state becomes Unknown under PPV1-004D if:
      - Prioritize and Not Important are both active;
@@ -809,7 +834,7 @@ The persistence and product workflow for corrections are outside the current imp
      - scoring.
   8. **Lifecycle:** PPV1-028 remains responsible for when a correction is active. PPV1-029 remains responsible for Undo semantics. PPV1-031 shall require reevaluation whenever authoritative correction state changes.
 
-  Verified user intent governs the final attention tier. It does not erase independently verified constitutional evidence.
+  Verified user intent governs the final attention tier. It does not erase independently verified product-policy evidence.
 - **PPV1-028 — Override lifetime:** Priority Policy v1 adopts indefinite correction lifetime.
 
   1. **Lifetime:** A verified active correction remains active indefinitely until the owner explicitly:
@@ -856,9 +881,9 @@ The persistence and product workflow for corrections are outside the current imp
      - correction state becomes verified active-absent;
      - PPV1-027 correction dominance ends;
      - the undone correction reason is no longer emitted.
-  5. **Reevaluation:** The candidate shall be reevaluated from current constitutional evidence. Ordinary rules determine the final tier under PPV1-012 unless another authoritative active correction exists through a separate approved transition.
+  5. **Reevaluation:** The candidate shall be reevaluated from current product-policy evidence. Ordinary rules determine the final tier under PPV1-012 unless another authoritative active correction exists through a separate approved transition.
   6. **Historical records:** Inactive and undone correction records remain auditable. They are historical evidence of past user actions, but they are non-operative evaluator inputs.
-  7. **Idempotency:** Repeating Undo for the same already-undone correction creates no additional constitutional effect. It shall not create duplicate history, reactivate another correction, or alter the resulting tier beyond any required deterministic reevaluation.
+  7. **Idempotency:** Repeating Undo for the same already-undone correction creates no additional product-policy effect. It shall not create duplicate history, reactivate another correction, or alter the resulting tier beyond any required deterministic reevaluation.
   8. **Failed or ambiguous Undo:** A failed, incomplete, or ambiguous persistence transition shall not establish verified absence. Correction state remains Unknown under PPV1-004D until authoritative state is confirmed. PPV1-035 governs incomplete-correction-evidence disclosure.
   9. **Existing authorities:** PPV1-027 governs correction precedence before Undo. PPV1-028 governs correction lifetime. PPV1-031 shall require reevaluation after a confirmed Undo transition. PPV1-041 remains responsible for user-facing correction and Undo wording.
 
@@ -900,7 +925,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - `policyVersion` changes;
      - any Founder-approved parameter affecting evaluation changes;
      - the future-skew tolerance changes;
-     - a constitutional rule becomes newly operative, changes, or is removed under a new approved policy version.
+     - a product-policy rule becomes newly operative, changes, or is removed under a new approved policy version.
   3. **Candidate-scope changes:** Invalidate when:
      - verified Inbox membership changes;
      - verified Spam or Trash membership changes;
@@ -912,8 +937,8 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - verified incoming-message direction changes;
      - timestamp state changes between valid and Unknown;
      - future-skew classification changes;
-     - Manual Star changes between verified present, verified absent, and Unknown;
-     - any future Founder-approved operative constitutional input changes.
+     - Provider Star changes between verified present, verified absent, and Unknown;
+     - any future Founder-approved operative product-policy input changes.
   5. **Correction-state changes:** Invalidate when:
      - Prioritize becomes active;
      - Not Important becomes active;
@@ -930,7 +955,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
   7. **Collection-state changes:** Invalidate when:
      - synchronization readiness changes;
      - coverage changes between partial and ready;
-     - the authoritative checkpoint changes in a way that alters normalized constitutional inputs or coverage;
+     - the authoritative checkpoint changes in a way that alters normalized product-policy inputs or coverage;
      - collection-level evidence-completeness state changes.
   8. **Invalidation scope:** A candidate-level trigger invalidates:
      - the affected candidate evaluation;
@@ -944,7 +969,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - a new caller-supplied fixed `evaluatedAt`.
 
      Only completed deterministic reevaluation may produce a replacement current result.
-  10. **Non-triggers:** The following shall not independently require recalculation when normalized constitutional inputs and collection truth remain unchanged:
+  10. **Non-triggers:** The following shall not independently require recalculation when normalized product-policy inputs and collection truth remain unchanged:
       - provider history identifiers alone;
       - synchronization timestamps alone;
       - watch-renewal timestamps;
@@ -956,15 +981,15 @@ An evaluation is a statement about a specific normalized projection at a specifi
       - transport;
       - UI navigation;
       - provider response order;
-      - sender, recipient, or attachment metadata while constitutionally non-operative;
+      - sender, recipient, or attachment metadata while non-operative under this product policy;
       - message bodies, snippets, or attachment content.
   11. **No hidden mutation:** Recalculation observes authoritative changes. It shall not itself create, modify, expire, undo, or repair provider facts or user corrections.
 
-  Operational activity is not a constitutional trigger merely because it occurred. Only a change to constitutional inputs, authority, coverage, completeness, policy identity, or validity status requires recalculation.
+  Operational activity is not a product-policy trigger merely because it occurred. Only a change to product-policy inputs, authority, coverage, completeness, policy identity, or validity status requires recalculation.
 - **PPV1-032 — Stale presentation:** Priority Policy v1 adopts conditional stale visibility.
 
   1. **Presentation state:** Staleness is a presentation state rather than an evaluation state. A completed deterministic evaluation remains immutable after completion. Becoming stale changes only whether and how that evaluation may be represented. It shall not modify the evaluation's:
-     - constitutional outputs;
+     - product-policy outputs;
      - `evaluatedAt`;
      - `policyVersion`;
      - candidate ordering;
@@ -986,7 +1011,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - never have its timestamp refreshed by retrieval or presentation;
      - remain subject to PPV1-033 retention limits;
      - be replaced only by completed deterministic reevaluation.
-  4. **Known invalidation:** A stale result shall be withheld when a known PPV1-031 trigger establishes that its constitutional state may no longer be accurate, including:
+  4. **Known invalidation:** A stale result shall be withheld when a known PPV1-031 trigger establishes that its product-policy state may no longer be accurate, including:
      - authoritative correction changes;
      - known candidate-scope changes;
      - known operative evidence changes;
@@ -1009,13 +1034,13 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - exact candidate-scope identity;
      - `policyVersion`;
      - complete Founder-approved parameter set;
-     - exact normalized constitutional input-snapshot identity;
+     - exact normalized product-policy input-snapshot identity;
      - authoritative correction-state identity;
      - synchronization readiness and coverage identity;
      - evidence-completeness identity;
      - original `evaluatedAt`.
 
-     Cached evaluations shall never cross owners, mailboxes, policy versions, parameter sets, scopes, correction states, coverage states, or constitutional input snapshots.
+     Cached evaluations shall never cross owners, mailboxes, policy versions, parameter sets, scopes, correction states, coverage states, or product-policy input snapshots.
   2. **Immutability:** A cached evaluation is immutable. Cache retrieval, serialization, transport, display, or provider unavailability shall not modify:
      - `evaluatedAt`;
      - `policyVersion`;
@@ -1025,7 +1050,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
      - readiness;
      - coverage;
      - evidence completeness;
-     - constitutional inputs;
+     - product-policy inputs;
      - retention boundaries.
   3. **Current use:** A compatible cached entry may be presented as current only while:
      - PPV1-030 permits; and
@@ -1043,7 +1068,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
      Implementations shall not invent, substitute, extend, or locally configure another duration.
   6. **No sliding retention:** Retrieval, use, transport, serialization, display, cache access, application restart, or provider unavailability shall not extend the current-validity or stale-retention interval.
   7. **Immediate semantic invalidation:** A PPV1-031 trigger immediately removes the affected entry from both current and stale presentation eligibility. Known-invalid entries shall never be used as PPV1-032 stale fallback, even if physical deletion is asynchronous.
-  8. **Cache authority:** Cache is an optimization and never a source of constitutional truth. A cache miss does not alter evaluation semantics. A cache failure shall result only in:
+  8. **Cache authority:** Cache is an optimization and never a source of product-policy truth. A cache miss does not alter evaluation semantics. A cache failure shall result only in:
      - deterministic reevaluation; or
      - truthful unavailability.
   9. **Privacy and identity boundaries:** Cache keys and entries shall not expose or derive identity from:
@@ -1064,7 +1089,7 @@ An evaluation is a statement about a specific normalized projection at a specifi
       - freshness;
       - provider availability.
 
-  Cache may preserve an immutable last-known evaluation. It may never preserve that evaluation's authority after a known constitutional invalidation.
+  Cache may preserve an immutable last-known evaluation. It may never preserve that evaluation's authority after a known product-policy invalidation.
 
 An implementation must always expose `evaluatedAt` and `policyVersion`. Cached evaluations must be scoped to the authenticated owner and exact policy inputs.
 
@@ -1079,6 +1104,7 @@ threadId
 tier
 reasonCodes
 reasons
+reasonRoles
 policyVersion
 evaluatedAt
 ```
@@ -1088,7 +1114,8 @@ Contract invariants:
 - `threadId` is the application's owner-scoped thread identifier, not a raw provider payload.
 - `tier` is one approved tier identifier.
 - `reasonCodes` is an ordered list of approved stable identifiers.
-- `reasons` is an ordered list of approved human-readable strings corresponding one-to-one with `reasonCodes`.
+- `reasons` is an ordered list of PPV1-017A canonical display strings corresponding one-to-one with `reasonCodes`.
+- `reasonRoles` is an ordered list containing only `DETERMINING` or `SUPPORTING`, corresponding one-to-one with `reasonCodes` and `reasons`.
 - `policyVersion` is `1.0`.
 - `evaluatedAt` is the caller-supplied fixed instant used for the complete evaluation.
 - No confidence score, inferred urgency, raw Gmail response, message content, or hidden diagnostic is returned.
@@ -1127,7 +1154,7 @@ Collection contract decisions:
      A candidate must have verified absence from those locations.
   7. **Additional locations:** `additionalLocationMembership` shall be `DOES_NOT_DISQUALIFY`. Sent, Draft, or other additional location participation shall not disqualify an otherwise eligible Inbox thread.
   8. **Temporal scope:** `temporalLookback` shall be `UNBOUNDED`. The contract shall not use `null`, omission, zero, or a numeric sentinel to represent this rule.
-  9. **Candidate-count scope:** `candidateCountLimit` shall be `UNBOUNDED`. This represents constitutional eligibility only and shall not be interpreted as proof that every eligible candidate was discovered, evaluated, or delivered in one response.
+  9. **Candidate-count scope:** `candidateCountLimit` shall be `UNBOUNDED`. This represents product-policy eligibility only and shall not be interpreted as proof that every eligible candidate was discovered, evaluated, or delivered in one response.
   10. **Separation from collection state:** `candidateScope` describes eligibility rules only. It shall not contain or imply:
       - synchronization readiness;
       - partial or complete coverage;
@@ -1139,10 +1166,10 @@ Collection contract decisions:
       - evidence completeness.
 
       PPV1-035 remains the sole authority for those collection-level facts.
-  11. **Provider neutrality:** The normalized identifiers `INBOX`, `SPAM`, and `TRASH` are constitutional concepts. Provider-specific labels and mappings remain governed by the future Provider Mapping Specification.
-  12. **Deterministic representation:** Field names and enum values shall be canonical. Array ordering shall be deterministic and exactly as constitutionally defined.
+  11. **Provider neutrality:** The normalized identifiers `INBOX`, `SPAM`, and `TRASH` are product-policy concepts. Provider-specific labels and mappings remain governed by the future Provider Mapping Specification.
+  12. **Deterministic representation:** Field names and enum values shall be canonical. Array ordering shall be deterministic and exactly as defined by this product policy.
 
-  An `UNBOUNDED` constitutional scope does not claim that the current collection contains every eligible candidate. It means the policy itself imposes no temporal or candidate-count cutoff.
+  An `UNBOUNDED` product-policy scope does not claim that the current collection contains every eligible candidate. It means the policy itself imposes no temporal or candidate-count cutoff.
 - **PPV1-035 — Collection envelope:** Priority Policy v1 adopts a collection envelope that separates immutable evaluation facts from mutable presentation state.
 
   Canonical structure:
@@ -1216,7 +1243,7 @@ Collection contract decisions:
      - candidates;
      - candidate tiers or reasons.
   2. **Mutable presentation state:** The `presentation` object communicates whether and how the immutable evaluation is being shown. It may change from `CURRENT` to `STALE` only when PPV1-032 permits. Presentation changes do not create a new evaluation.
-  3. **Policy identity and timestamps:** `policyVersion` identifies the exact constitutional policy used. `evaluatedAt` is the original fixed evaluation time. `validThrough` shall be deterministically derived from:
+  3. **Policy identity and timestamps:** `policyVersion` identifies the exact product-policy version used. `evaluatedAt` is the original fixed evaluation time. `validThrough` shall be deterministically derived from:
      - `evaluatedAt`; and
      - the Founder-approved PPV1-030 evaluation-validity interval.
 
@@ -1226,13 +1253,13 @@ Collection contract decisions:
      - the Founder-approved PPV1-033 stale-retention interval.
 
      PPV1-035 shall not duplicate or independently redefine those parameter values.
-  4. **Candidate scope:** `candidateScope` shall be exactly the PPV1-034 canonical object. It describes constitutional eligibility only.
+  4. **Candidate scope:** `candidateScope` shall be exactly the PPV1-034 canonical object. It describes product-policy eligibility only.
   5. **Synchronization coverage:** `synchronization.coverage` shall be:
      - `READY` when PPV1-005 authoritative candidate coverage is established;
      - `PARTIAL` otherwise when partial results are truthfully represented.
 
      Coverage shall not redefine candidate eligibility.
-  6. **Evidence completeness:** `evidenceCompleteness.state` shall be `COMPLETE` only when no represented candidate has incomplete operative constitutional evidence. Otherwise it shall be `INCOMPLETE`.
+  6. **Evidence completeness:** `evidenceCompleteness.state` shall be `COMPLETE` only when no represented candidate has incomplete operative product-policy evidence. Otherwise it shall be `INCOMPLETE`.
 
      `incompleteEvidence` kinds are canonical and ordered exactly as follows:
 
@@ -1280,17 +1307,17 @@ Collection contract decisions:
       - implementation diagnostics.
   16. **Deterministic representation:** Field names, enum values, array ordering, and conditional field presence shall be canonical and versioned.
 
-  The collection envelope communicates several independent constitutional dimensions. No single status field shall collapse eligibility, coverage, evidence completeness, delivery, freshness, or provider availability into one aggregate meaning.
+  The collection envelope communicates several independent product-policy dimensions. No single status field shall collapse eligibility, coverage, evidence completeness, delivery, freshness, or provider availability into one aggregate meaning.
 
 ### PPV1-036 — No-reason representation
 
-Empty `reasonCodes` and `reasons` arrays are permitted only for the `NO_IMMEDIATE_SIGNALS` tier when no affirmative constitutional evidence exists.
+Empty `reasonCodes` and `reasons` arrays are permitted only for the `NO_IMMEDIATE_SIGNALS` tier when no affirmative product-policy evidence exists.
 
 The evaluator must not fabricate synthetic evidence. Absence of affirmative evidence shall not itself become affirmative evidence.
 
 ### PPV1-037 — Contract timestamp format
 
-All constitutional timestamps use RFC 3339 UTC serialization with millisecond precision.
+All product-policy timestamps use RFC 3339 UTC serialization with millisecond precision.
 
 The canonical format is:
 
@@ -1323,20 +1350,20 @@ The interface must not:
 
 - **PPV1-038 — Tier display labels:** Priority Policy v1 adopts the following canonical English display labels:
 
-  | Constitutional identifier | Canonical English display label |
+  | Product-policy identifier | Canonical English display label |
   |---|---|
   | `NEEDS_ATTENTION` | Needs attention |
   | `REVIEW_LATER` | Review later |
   | `NO_IMMEDIATE_SIGNALS` | No immediate signals |
 
-  Constitutional rules:
+  Product-policy rules:
 
   1. Display labels do not change tier identifiers or semantics.
   2. “Needs attention” communicates evidence-based guidance, not urgency, certainty, objective importance, or required action.
   3. “Review later” does not establish a deadline or imply that review is mandatory.
   4. “No immediate signals” does not mean unimportant, irrelevant, safe to ignore, or requiring no human judgment.
-  5. Presentation layers may localize these labels but shall preserve their constitutional meaning.
-  6. Localization shall preserve constitutional meaning rather than literal English wording. Localized labels shall not strengthen, weaken, or otherwise alter the constitutional semantics of the approved English display labels.
+  5. Presentation layers may localize these labels but shall preserve their product-policy meaning.
+  6. Localization shall preserve product-policy meaning rather than literal English wording. Localized labels shall not strengthen, weaken, or otherwise alter the product-policy semantics of the approved English display labels.
   7. Explanatory and empty-state wording remains governed separately by PPV1-039 and PPV1-040.
   8. Correction wording remains governed by PPV1-041.
 - **PPV1-039 — Empty-state copy:** Priority Policy v1 adopts the following canonical English state-qualified copy.
@@ -1434,7 +1461,7 @@ The interface must not:
      > No current or permitted previous evaluation can be shown. Try again later.
 
   7. **Timestamp representation:** `{evaluatedAt}` shall represent the exact PPV1-037 instant. Interfaces may use an accessible localized representation of the same instant. They shall not alter or approximate the underlying instant.
-  8. **Localization:** Localization may adapt grammar and natural phrasing while preserving constitutional meaning. Localized copy shall not strengthen, weaken, omit, or alter claims about:
+  8. **Localization:** Localization may adapt grammar and natural phrasing while preserving product-policy meaning. Localized copy shall not strengthen, weaken, omit, or alter claims about:
      - readiness;
      - coverage;
      - freshness;
@@ -1460,7 +1487,7 @@ The interface must not:
   11. **“Try again later” boundary:** “Try again later” is general recovery guidance. It does not promise that availability will recover within a particular duration.
   12. **Existing authority:** PPV1-040 remains responsible for broader candidate-scope explanation.
 
-  State copy explains what the system constitutionally knows about the displayed collection. It shall never convert uncertainty, partial coverage, staleness, or unavailability into a stronger claim.
+  State copy explains what the system knows under this product policy about the displayed collection. It shall never convert uncertainty, partial coverage, staleness, or unavailability into a stronger claim.
 - **PPV1-040 — Scope disclosure copy:** Priority Policy v1 adopts a layered disclosure consisting of:
 
   1. an always-available candidate-scope statement;
@@ -1519,7 +1546,7 @@ The interface must not:
 
      > Synchronization is partial, and this view shows only part of the represented results. Additional eligible Inbox threads may still exist.
 
-  Constitutional rules:
+  Product-policy rules:
 
   1. “Unbounded” describes policy eligibility, not synchronization or delivery completeness.
   2. Pagination, batching, streaming, caching, and progressive delivery must not be described as eligibility limits.
@@ -1528,7 +1555,7 @@ The interface must not:
   5. Scope disclosure must not imply currentness when presentation is stale.
   6. PPV1-039 state copy remains authoritative for empty, stale, and unavailable states.
   7. The scope and coverage disclosure supplements PPV1-039 and must not contradict it.
-  8. Provider-specific labels may be translated into familiar interface terms, but constitutional behavior remains provider-neutral.
+  8. Provider-specific labels may be translated into familiar interface terms, but product-policy behavior remains provider-neutral.
   9. Localization may adapt grammar while preserving every claim about eligibility, exclusions, coverage, and delivery.
   10. The interface may progressively disclose the expanded explanation, but the concise scope and applicable coverage statement must remain accessible, including to assistive technology.
 - **PPV1-041 — Correction copy:** Priority Policy v1 adopts lifecycle-qualified canonical English copy.
@@ -1595,7 +1622,7 @@ The interface must not:
 
      Description:
 
-     > Your correction is no longer active. This thread is being reevaluated using its current constitutional evidence.
+     > Your correction is no longer active. This thread is being reevaluated using its current product-policy evidence.
 
   5. **Undo and reevaluation confirmed**
 
@@ -1605,7 +1632,7 @@ The interface must not:
 
      Description:
 
-     > Your correction is no longer active. This thread was reevaluated using its current constitutional evidence.
+     > Your correction is no longer active. This thread was reevaluated using its current product-policy evidence.
 
   6. **Definitive correction failure**
 
@@ -1648,9 +1675,9 @@ The interface must not:
 
      Canonical description:
 
-     > There is no active correction to undo. The current result is based on available constitutional evidence.
+     > There is no active correction to undo. The current result is based on available product-policy evidence.
 
-  Constitutional boundaries:
+  Product-policy boundaries:
 
   1. Success copy appears only after authoritative correction state and the corresponding evaluation are confirmed.
   2. Pending copy must not imply persistence or final-tier confirmation.
@@ -1748,7 +1775,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - operational correctness;
      - qualifying-session volume and representativeness.
 
-     Until that review is completed, the 75% value shall be treated as a provisional Sprint target rather than a permanent constitutional success boundary.
+     Until that review is completed, the 75% value shall be treated as a provisional Sprint target rather than a permanent product-policy success boundary.
   10. **Privacy:** Measurement may collect only:
       - pseudonymous session identity;
       - timing boundaries;
@@ -1801,7 +1828,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
   6. **Observation window:** Use a rolling 28-day observation window. For Undo and replacement analysis, use a seven-day follow-up period after each authoritative correction transition. Cohorts without the complete follow-up period remain immature and must be reported separately.
 
      Also report rapid Undo occurring within ten minutes of authoritative confirmation. Rapid Undo is an investigation signal, not automatic proof of interface failure.
-  7. **Acceptable range:** Priority Policy v1 defines no universal minimum or maximum correction-activation rate. The constitutionally acceptable correction-activation range is therefore:
+  7. **Acceptable range:** Priority Policy v1 defines no universal minimum or maximum correction-activation rate. The correction-activation range permitted under this product policy is therefore:
 
      > 0% through 100%, subject to truthful contextual interpretation.
 
@@ -1824,7 +1851,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - cohort-specific needs.
 
      These possibilities must not be resolved through inference from the rate alone.
-  8. **Baseline interpretation:** The first representative 28-day production cohort establishes an observational baseline, not a constitutional target. Subsequent reviews must compare:
+  8. **Baseline interpretation:** The first representative 28-day production cohort establishes an observational baseline, not a product-policy target. Subsequent reviews must compare:
      - correction direction;
      - Undo and replacement behavior;
      - explanation usefulness;
@@ -1840,7 +1867,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - a complete 28-day observation window;
      - complete seven-day follow-up for Undo and replacement metrics.
 
-     Smaller cohorts may be reported as insufficient evidence but must not be used for constitutional success or failure claims. Single-user or internal validation may inspect local behavior without being represented as a production-level correction-rate conclusion.
+     Smaller cohorts may be reported as insufficient evidence but must not be used for product-policy success or failure claims. Single-user or internal validation may inspect local behavior without being represented as a production-level correction-rate conclusion.
   10. **Privacy:** Measurement may collect only:
       - pseudonymous owner and session identities;
       - policy version;
@@ -1878,7 +1905,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      > After viewing a Priority Policy tier and its reasons, can a user accurately explain why the candidate received that result, understand what the result does not claim, and identify how to exercise or undo explicit control?
 
   2. **Required comprehension:** A participant passes the comprehension assessment only when they can, without corrective prompting:
-     1. identify the constitutional evidence represented by the displayed reason;
+     1. identify the product-policy evidence represented by the displayed reason;
      2. distinguish the final-tier-determining reason from any supporting reason;
      3. recognize that the result does not claim urgency, objective importance, certainty, required action, or message-content understanding;
      4. identify the available Prioritize, Not Important, and Undo behavior relevant to the scenario;
@@ -1912,7 +1939,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - at least 80% rate the explanation as Very useful or Extremely useful;
      - no critical keyboard, screen-reader, focus, labeling, or reading-order barrier prevents explanation access.
 
-     Failure of any accessibility cohort to satisfy the required comprehension threshold constitutes failure of the release-decision study for that cohort and requires remediation before constitutional success may be claimed.
+     Failure of any accessibility cohort to satisfy the required comprehension threshold constitutes failure of the release-decision study for that cohort and requires remediation before product-policy success may be claimed.
   6. **Study cohort:** A release-decision study requires at least:
      - 20 representative participants;
      - coverage of every operative tier and reason condition;
@@ -1924,7 +1951,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      Results from smaller formative studies may guide iteration but shall not satisfy the release threshold.
   7. **Scenario design:** Use controlled synthetic or consented disposable scenarios. Scenarios must:
      - use the exact approved tier labels and reason wording;
-     - preserve the constitutional reason and tier mappings;
+     - preserve the product-policy reason and tier mappings;
      - include no hidden information unavailable to the participant;
      - avoid emotionally manipulative or unusually obvious examples;
      - test both affirmative evidence and explicit correction outcomes;
@@ -1961,10 +1988,10 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
   11. **Interpretation guardrails:**
       - Comprehension is more authoritative than positive sentiment.
       - High satisfaction with incorrect understanding is not success.
-      - Fast task completion with constitutional misunderstanding is not success.
+      - Fast task completion with product-policy misunderstanding is not success.
       - Lower ratings are research evidence, not user failure.
       - Findings shall not automatically modify policy.
-      - Any resulting constitutional wording or behavior change requires separate Founder approval.
+      - Any resulting product-policy wording or behavior change requires separate Founder approval.
 - **PPV1-045 — Trust measure:** Priority Policy v1 adopts a calibrated-trust research protocol combining comprehension, appropriate reliance, perceived control, and qualitative evidence.
 
   1. **Definition**
@@ -1973,7 +2000,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
 
      > A user understands what Priority Policy knows, understands what it does not know, can verify why a result was produced, retains final judgment, and is willing to use the result as a starting point without treating it as authoritative truth.
 
-     High confidence without constitutional understanding is overtrust and does not satisfy this definition.
+     High confidence without product-policy understanding is overtrust and does not satisfy this definition.
   2. **Primary research question**
 
      > Can users rely on Priority Policy as a transparent starting aid while accurately recognizing its limits and retaining control over their final judgment?
@@ -2000,7 +2027,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      “Completely” shall not be treated as inherently better than “Very much.” Researchers must examine whether a “Completely” response reflects overtrust.
   4. **Calibrated-reliance scenarios:** Participants must encounter scenarios involving:
      - a supported `NEEDS_ATTENTION` result;
-     - `REVIEW_LATER` from Manual Star;
+     - `REVIEW_LATER` from Provider Star;
      - default `NO_IMMEDIATE_SIGNALS`;
      - incomplete evidence;
      - partial synchronization;
@@ -2037,7 +2064,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - no critical accessibility barrier prevents understanding, verification, correction, or Undo.
 
      A high trust rating cannot compensate for failed comprehension, overtrust, loss of control, or an accessibility failure.
-  7. **Accessibility cohorts:** Every accessibility cohort must be evaluated independently. Failure of an accessibility cohort to satisfy the calibrated-trust threshold constitutes failure for that cohort and requires remediation before constitutional trust success may be claimed.
+  7. **Accessibility cohorts:** Every accessibility cohort must be evaluated independently. Failure of an accessibility cohort to satisfy the calibrated-trust threshold constitutes failure for that cohort and requires remediation before product-policy trust success may be claimed.
   8. **Study cohort:** A release-decision study requires at least:
      - 20 representative participants;
      - at least five participants using keyboard-only navigation or relevant assistive technology;
@@ -2055,7 +2082,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - whether they understand how to correct and undo;
      - whether any wording feels absolute, judgmental, or misleading.
 
-     Researchers shall preserve original participant wording and document every manual coding override. Researchers shall not explain or correct constitutional meaning until the participant's recorded response is complete.
+     Researchers shall preserve original participant wording and document every manual coding override. Researchers shall not explain or correct product-policy meaning until the participant's recorded response is complete.
   10. **Evaluation timing:** Trust must be evaluated:
       - before initial production release;
       - after a `policyVersion` change;
@@ -2084,15 +2111,15 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
       - High sentiment with low comprehension is not success.
       - Researchers shall not combine results across policy versions without explicit segmentation.
       - Findings do not authorize automatic policy changes.
-      - Any constitutional change requires separate Founder approval.
-- **PPV1-046 — Operational correctness:** Priority Policy v1 adopts zero-tolerance constitutional correctness targets supported by deterministic tests, bounded fault injection, and privacy-preserving runtime verification.
+      - Any product-policy change requires separate Founder approval.
+- **PPV1-046 — Operational correctness:** Priority Policy v1 adopts zero-tolerance product-policy correctness targets supported by deterministic tests, bounded fault injection, and privacy-preserving runtime verification.
 
-  1. **Correctness principle:** Operational scale, concurrency, caching, retries, pagination, serialization, and deployment topology shall not weaken constitutional correctness. Availability may have an error budget. Constitutional truthfulness shall not.
+  1. **Correctness principle:** Operational scale, concurrency, caching, retries, pagination, serialization, and deployment topology shall not weaken product-policy correctness. Availability may have an error budget. Product-policy truthfulness shall not.
   2. **Deterministic replay target**
 
      Target:
 
-     > 100% exact canonical output equality for identical constitutional inputs, identical evaluatedAt, identical policyVersion, and identical Founder-approved parameters.
+     > 100% exact canonical output equality for identical product-policy inputs, identical evaluatedAt, identical policyVersion, and identical Founder-approved parameters.
 
      Mismatch target:
 
@@ -2135,7 +2162,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - 100% enforcement of inclusive validity and retention boundaries;
      - 100% withholding of affected derived collections after a known PPV1-031 invalidation.
 
-     Temporary inability to produce an evaluation must result in truthful unavailability, not reuse of a constitutionally invalid result.
+     Temporary inability to produce an evaluation must result in truthful unavailability, not reuse of a result that is invalid under this product policy.
   4. **Policy-version reporting targets:** The following targets are absolute:
      - 100% of candidate evaluations include the exact operative `policyVersion`;
      - 100% of collection envelopes include the exact operative `policyVersion`;
@@ -2152,7 +2179,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - zero cache entries cross candidate-scope identities;
      - zero application-owned thread identifiers appear in another owner's evaluation.
 
-     Any owner-boundary violation is a security incident as well as a constitutional correctness failure.
+     Any owner-boundary violation is a security incident as well as a product-policy correctness failure.
   6. **Required pre-release verification:** Release evidence must include:
      1. exhaustive tests for every approved rule, tier, reason, correction state, Unknown state, and boundary condition;
      2. deterministic permutation tests for candidate input order and asynchronous completion order;
@@ -2180,7 +2207,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - partial and stale presentation;
      - unavailable-provider conditions.
 
-     The staging gate requires zero constitutional correctness violations.
+     The staging gate requires zero product-policy correctness violations.
   8. **Production reporting:** Report at minimum for each `policyVersion`:
      - total completed evaluations;
      - replay verifications performed;
@@ -2210,7 +2237,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - success or failure count;
      - timing boundary category;
      - pseudonymous owner-scoped measurement identity;
-     - keyed fingerprints of canonical constitutional inputs and outputs when replay comparison requires them.
+     - keyed fingerprints of canonical product-policy inputs and outputs when replay comparison requires them.
 
      It shall not retain solely for verification:
 
@@ -2224,7 +2251,7 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
      - raw provider identifiers.
 
      Fingerprints must be scoped to approved verification, must not permit reconstruction, and must not be reusable for unrelated analytics.
-  10. **Failure handling:** Any observed constitutional correctness violation:
+  10. **Failure handling:** Any observed product-policy correctness violation:
       - blocks release when found before production;
       - triggers incident review when found in production;
       - suspends claims of operational correctness for the affected policy version and scope;
@@ -2232,14 +2259,14 @@ Success must measure whether the policy reduces uncertainty and earns trust, not
       - requires verification that affected cached or presented results are no longer usable;
       - does not authorize silent data repair or policy modification.
 
-      No constitutional correctness violation may be resolved solely by suppressing telemetry, relaxing verification, or reclassifying the violation. Remediation shall address the underlying cause before operational correctness claims are restored.
+      No product-policy correctness violation may be resolved solely by suppressing telemetry, relaxing verification, or reclassifying the violation. Remediation shall address the underlying cause before operational correctness claims are restored.
 
-      Every production incident affecting constitutional correctness shall produce a permanent regression test covering the identified failure mode before the incident is considered fully resolved.
+      Every production incident affecting product-policy correctness shall produce a permanent regression test covering the identified failure mode before the incident is considered fully resolved.
 
       A policy change requires separate Founder approval.
   11. **Interpretation guardrails:**
       - Zero observed violations is not proof that unobserved violations are impossible.
-      - Test volume does not replace coverage of constitutional boundaries.
+      - Test volume does not replace coverage of product-policy boundaries.
       - Availability failure must not be converted into stale-result misuse.
       - A blocked invalid presentation demonstrates guardrail operation and is not equivalent to an invalid result reaching a user.
       - Metrics must remain segmented by `policyVersion`.
@@ -2258,7 +2285,7 @@ Metrics must not collect message bodies, recipient content, or other mailbox con
 6. Provider timestamps may be missing, malformed, or future-dated.
 7. Synchronization lag can make an otherwise correct evaluation stale.
 8. Personal preferences differ; deterministic defaults will require reversible correction.
-9. Incomplete policy TODOs prevent a conforming executable implementation.
+9. Unresolved non-operative future-policy TODOs must remain excluded from implementation and must not be mistaken for approved behavior.
 
 These risks must be represented honestly in product review and validation. They must not be concealed through confidence language.
 
@@ -2289,7 +2316,7 @@ Sprint 1
 
 Decision:
 
-Approved as the engineering source of truth for Priority Policy v1 and Attention Contract v1.
+Approved as the authoritative AI Email Organizer product policy for Priority Policy v1 and Attention Contract v1.
 
 Founder directive:
 
@@ -2299,9 +2326,9 @@ Approval date:
 
 **PPV1-047 — Approval date:** 2026-07-24
 
-Constitutional rules:
+Product-policy rules:
 
-1. `2026-07-24` is the calendar date on which the Founder approved the repository document as the constitutional engineering source of truth under FD-001.
+1. `2026-07-24` is the calendar date on which the Founder approved this document as the authoritative AI Email Organizer product policy under FD-001.
 2. The date uses ISO 8601 calendar-date format: `YYYY-MM-DD`.
 3. The approval date belongs to Priority Policy v1 and Attention Contract v1 document governance.
 4. It does not independently approve:
@@ -2319,15 +2346,19 @@ Constitutional rules:
 
 Approval boundary:
 
-The document structure, philosophy, design promise, deterministic/non-AI boundary, normalized-metadata boundary, future-age clamping rule, correction principles, Attention Contract minimum fields, non-goals, and source-of-truth role are approved. Numbered TODOs are explicit unresolved decisions and are not authorization to implement behavior.
+The document structure, inherited-philosophy reference, design promise, deterministic/non-AI boundary, normalized-metadata boundary, correction principles, Attention Contract minimum fields, non-goals, and product-policy authority are approved. WSF-008 through WSF-011 complete the Priority Policy MVP foundation. Remaining numbered TODOs are non-operative future-policy or launch decisions; they are not authorization to implement additional behavior and do not block the approved Milestone 3 scope.
 
 ## 19. Revision history
 
 | Version | Status | Date | Decision owner | Change |
 | --- | --- | --- | --- | --- |
+| 1.0 | Approved amendment | 2026-07-29 | Founder | WSF-011 established the canonical application `threadId`, Provider Binding lifecycle, correction/replay attachment, provider replacement boundary, and deterministic migration expectations. |
+| 1.0 | Approved amendment | 2026-07-29 | Founder | WSF-010 established the immutable canonical reason registry for `policyVersion` `1.0`. |
+| 1.0 | Approved amendment | 2026-07-29 | Founder | WSF-009 separated Provider Star from Manual Star and approved the truthful Gmail evidence mapping. |
+| 1.0 | Approved amendment | 2026-07-29 | Founder | WSF-008 established the inclusive five-minute future-skew tolerance. |
 | 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #5 contract vocabulary decisions for tier identifiers, evidence-specific reason codes, localized canonical reasons, reason precedence, empty-reason representation, and canonical timestamps. |
-| 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #4 decisions defining Recency as objective temporal evidence, prohibiting tier promotion from Recency alone, preserving explicit user-intent precedence, and permitting Recency only as a deterministic tie-breaker when candidates are otherwise constitutionally equal. |
-| 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #3 decisions for Manual user star, provider-verifiable signal origin, missing-metadata fallbacks, candidate-count scalability, provider neutrality, explicit User Override, and AI independence. |
+| 1.0 | Approved amendment | 2026-07-24 | Founder | Recorded Founder Design Session #4 decisions defining Recency as objective temporal evidence, prohibiting tier promotion from Recency alone, preserving explicit user-intent precedence, and permitting Recency only as a deterministic tie-breaker among candidates that are otherwise equal under this product policy. |
+| 1.0 | Superseded terminology | 2026-07-24 | Founder | Recorded Founder Design Session #3 terminology for Manual user star; WSF-009 supersedes that provider-mapping terminology without changing the historical record. |
 | 1.0 | Approved | 2026-07-24 | Founder | Established the repository source of truth under FD-001. Unresolved policy decisions are enumerated for Founder review before executable implementation. |
 
 Changes to operative policy require:

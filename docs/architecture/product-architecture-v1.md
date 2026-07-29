@@ -6,16 +6,16 @@
 | --- | --- |
 | Status | Evaluation baseline; current implementation plus clearly marked proposed design |
 | Version | 1.0 |
-| Scope | Wong Email monorepo and Priority Policy v1 integration boundary |
-| Constitutional source | [Priority Policy v1 and Attention Contract v1](../product/priority-policy-v1.md) |
+| Scope | AI Email Organizer monorepo and Priority Policy v1 integration boundary |
+| Product-policy source | [Priority Policy v1 and Attention Contract v1](../product/priority-policy-v1.md) |
 
 ## Purpose and architectural scope
 
-This document describes what the repository implements today and the architecture required to integrate the approved Priority Policy v1 (PPV1) without changing its constitutional meaning. It is not an implementation authorization for policy TODOs. The companion documents are [Wong Design System v1](../design/wong-design-system-v1.md) and [Data and State Model v1](data-state-model-v1.md).
+This document describes what the repository implements today and the architecture required to integrate the approved Priority Policy v1 (PPV1) without changing its product-policy meaning. It is not an implementation authorization for policy TODOs. The companion documents are the [AI Email Organizer Interface Specification v1](../design/ai-email-organizer-interface-spec-v1.md) and [Data and State Model v1](data-state-model-v1.md).
 
 ## Product and system context
 
-Wong Email connects a Gmail mailbox through OAuth, keeps a local normalized metadata projection, and provides a web mailbox workspace, thread reading, drafts, and selected Gmail commands. Gmail is authoritative for remote mailbox state. PostgreSQL is the durable local projection and workflow record; Redis/BullMQ transports and schedules work. The README explicitly says the product stores metadata and encrypted token references, while Gmail remains source of truth.
+AI Email Organizer connects a Gmail mailbox through OAuth, keeps a local normalized metadata projection, and provides a web mailbox workspace, thread reading, drafts, and selected Gmail commands. Gmail is authoritative for remote mailbox state. PostgreSQL is the durable local projection and workflow record; Redis/BullMQ transports and schedules work. The README explicitly says the product stores metadata and encrypted token references, while Gmail remains source of truth.
 
 Current milestone evidence spans Gmail synchronization, mailbox workspace/thread reading, and draft/write capability work. The repository contains no Priority Policy evaluator, policy API, correction API, `priority_*` migration, collection-envelope contract, or evaluation cache. Therefore all PPV1 execution, correction, and cache architecture below is **Proposed architecture** unless identified as an existing integration mechanism.
 
@@ -26,7 +26,7 @@ Current milestone evidence spans Gmail synchronization, mailbox workspace/thread
 - Provider notifications are triggers, not truth; reconciliation and Gmail reads establish truth.
 - Commands are durable, encrypted-payload, idempotent workflows with authoritative provider confirmation.
 - PPV1 is deterministic and non-AI. AI Insight, if later approved, is a separate feature and must never attach confidence to a Priority Policy tier.
-- Approved constitutional requirements constrain future implementation; they do not imply code already exists.
+- Approved product-policy requirements constrain future implementation; they do not imply code already exists.
 
 ## Monorepo structure and major components
 
@@ -62,11 +62,15 @@ Archive and mark-unread create an encrypted, versioned provider command with a m
 
 ## Priority Policy evaluation integration (proposed)
 
-The evaluator consumes owner/mailbox-scoped normalized metadata only: verified current location, provider-verifiable incoming direction/timestamp, label state, and authoritative correction state. It produces the PPV1 tier, ordered reasons, policy version, approved-parameter identity, fixed `evaluatedAt`, validity boundaries, candidate scope, and collection envelope. It must preserve `Unknown`; malformed or missing evidence is never absence.
+The evaluator consumes owner/mailbox-scoped normalized metadata only: verified current location, provider-verifiable incoming direction/timestamp, Provider Star state, and authoritative correction state. It produces the PPV1 `tier`, ordered determining and supporting reasons, `policyVersion`, approved-parameter identity, fixed `evaluatedAt`, validity boundaries, candidate scope, and collection envelope. PPV1-001 through PPV1-035 exclusively own those semantics; architecture owns their isolation and execution boundaries.
 
-F01 is constitutionally resolved. PPV1-019 requires retaining all applicable authorized affirmative evidence reasons, active explicit correction reasons, and lower-tier supporting reasons when a higher tier wins; supporting reasons must not be presented as tier-determining. The inverse correction interaction is also resolved: under PPV1-012 and PPV1-027, an active correction fixes the final tier while ordinary rules continue to evaluate and their authorized evidence remains available as supporting reasons. For example, an active Not Important correction fixes `NO_IMMEDIATE_SIGNALS`, while an applicable Manual Star remains `MANUAL_STAR` supporting evidence and must not be presented as determining the final tier. This inverse case requires implementation verification, not additional Founder approval.
+F01 is resolved exclusively by PPV1-012 and PPV1-016 through PPV1-019. The architecture must preserve ordered reason codes, canonical reasons, and explicit determining/supporting roles without reinterpreting them.
 
-F02 is partially resolved: **The excessive-future-skew rule is approved. Within-tolerance behavior, strictly-beyond-tolerance Unknown classification, boundary inclusivity, disclosure, and recalculation semantics are defined. Only the exact numeric future-skew tolerance duration remains TODO (Founder Approval Required).**
+F02 is resolved exclusively by WSF-008 and PPV1-024. The architecture must transport the approved policy parameter, fixed `evaluatedAt`, original provider timestamp, temporal-evidence state, and disclosure facts without defining another tolerance.
+
+WSF-009 and PPV1-010A/011A own Provider Star and Manual Star semantics. The provider adapter maps Gmail evidence into the approved three-state Provider Star input; synchronization, architecture, or AI shall not infer Manual Star provenance.
+
+WSF-011 and PPV1-022 own canonical thread identity. Architecture shall maintain durable owner/mailbox-scoped Provider Bindings separately from mutable thread projections. Evaluator, correction, replay, API, and UI boundaries use application `threadId`; provider IDs remain inside adapter and binding boundaries.
 
 ### PPV1-031 invalidation wiring (proposed)
 
@@ -100,15 +104,17 @@ Threats requiring PPV1 controls include cross-owner cache disclosure, stale-as-c
 ## Known gaps, risks, and Founder decisions
 
 - Priority evaluator, corrections/history, envelopes, evaluation cache, runtime verification, and invalidation outbox consumer are not implemented.
-- F01 supporting-reason behavior, including the inverse correction-dominant case, is constitutionally resolved by PPV1-012, PPV1-019, and PPV1-025–029; executable contracts and tests remain not implemented.
-- F02's excessive-future-skew behavior is approved. Only the exact numeric future-skew tolerance duration remains **TODO (Founder Approval Required)**.
-- F03 permanent application `threadId` retirement/non-reuse after deletion is **TODO (Founder Approval Required)**; current UUID/FK schema does not state retirement policy.
+- F01 supporting-reason behavior is resolved by PPV1-012 and PPV1-016 through PPV1-019; executable contracts and tests remain not implemented.
+- F02 future-skew behavior and parameter are resolved by WSF-008 and PPV1-024; executable parameter contracts and boundary tests remain not implemented.
+- F03 canonical application `threadId`, Provider Binding lifecycle, projection rebuild, provider replacement, and non-reuse are resolved by WSF-011 and PPV1-022; durable binding persistence is not implemented.
+- Provider Star and the Manual Star provenance boundary are resolved by WSF-009 and PPV1-010A/011A; the normalized three-state adapter contract is not implemented.
+- Canonical reason wording is resolved by WSF-010 and PPV1-017A; executable registry contracts and tests are not implemented.
 - F04 atomic active-correction invariant, F05 read verification, F06 fingerprint design, F07 command invalidation, F08 AI-confidence boundary enforcement, and F11 PPV1 accessibility documentation are future work.
-- Retention/deletion and reconnect semantics for PPV1 artifacts require Founder and operational approval.
+- Retention duration, legal deletion, and operational lifecycle requirements for PPV1 artifacts remain unresolved operational decisions. Reconnect identity semantics are governed by WSF-011 and PPV1-022.
 
 ## Required architecture tests (proposed)
 
-Test owner/mailbox isolation; policy/parameter cache separation; keyed snapshot collision resistance; read-time verification; all PPV1-031 producers including reconciliation; fixed-clock validity/retention boundaries; deterministic permutations and replay; Unknown/malformed evidence; cache failure/provider unavailable/partial coverage; correction atomicity and idempotent Undo; F01 reason retention and non-determining presentation in both ordinary higher-tier and correction-dominant inverse cases; F02 within-, exactly-at-, and strictly-beyond-tolerance behavior once the numeric duration is approved; no AI-confidence field; and telemetry redaction. PPV1-046 additionally requires the constitutionally specified replay, fault-injection, staging, and privacy verification evidence before release claims.
+Test owner/mailbox isolation; policy/parameter cache separation; keyed snapshot collision resistance; read-time verification; all PPV1-031 producers including reconciliation; fixed-clock validity/retention boundaries; deterministic permutations and replay; Unknown/malformed evidence; cache failure/provider unavailable/partial coverage; correction atomicity and idempotent Undo; F01 reason retention and non-determining presentation in both ordinary higher-tier and correction-dominant inverse cases; F02 within-, exactly-at-, and strictly-beyond-tolerance behavior using the WSF-008 duration; no AI-confidence field; and telemetry redaction. PPV1-046 additionally requires the product-policy-specified replay, fault-injection, staging, and privacy verification evidence before release claims.
 
 ## Traceability to Priority Policy
 

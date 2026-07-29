@@ -65,7 +65,7 @@ Evidence: `apps/api/src/route-helpers/security.ts`, `apps/api/src/routes/mailbox
 - Semantic or hybrid search
 - Production launch governance
 
-The repository contains no `priority_*` migration or Priority Policy API. Those boundaries are also recorded in [Product Architecture v1](product-architecture-v1.md), [Data and State Model v1](data-state-model-v1.md), and [Wong Design System v1](../design/wong-design-system-v1.md).
+The repository contains no `priority_*` migration or Priority Policy API. Those boundaries are also recorded in [Product Architecture v1](product-architecture-v1.md), [Data and State Model v1](data-state-model-v1.md), and the [AI Email Organizer Interface Specification v1](../design/ai-email-organizer-interface-spec-v1.md).
 
 ## Relationship to the roadmap
 
