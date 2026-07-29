@@ -6,10 +6,7 @@ import type {
   ReasonCode,
   ReasonRole
 } from "../domain/evaluation.js";
-import type {
-  CorrectionEvidence,
-  ProviderStarEvidence
-} from "../domain/evidence.js";
+import type { ProviderStarEvidence } from "../domain/evidence.js";
 import type { PriorityPolicyEvaluatorInput } from "./contract.js";
 
 export class PriorityPolicyEvaluatorNotImplementedError extends Error {
@@ -77,23 +74,36 @@ const PROVIDER_STAR_EVALUATORS: Readonly<
   UNKNOWN: evaluateProviderStarUnknown
 });
 
-function assertSupportedCorrectionEvidence(
-  correction: CorrectionEvidence
-): void {
-  switch (correction.state) {
+function evaluateActivePrioritize(
+  input: PriorityPolicyEvaluatorInput
+): EvaluatedOutcome {
+  switch (input.candidate.providerStar.state) {
+    case "VERIFIED_PRESENT":
+      return createEvaluatedOutcome(
+        input,
+        "NEEDS_ATTENTION",
+        ["USER_PRIORITIZE", "PROVIDER_STAR"],
+        [
+          "You prioritized this conversation.",
+          "Starred in your email provider."
+        ],
+        ["DETERMINING", "SUPPORTING"]
+      );
     case "VERIFIED_ABSENT":
     case "UNKNOWN":
-      return;
-    case "VERIFIED_ACTIVE":
-      throw new PriorityPolicyEvaluatorNotImplementedError();
+      return createEvaluatedOutcome(
+        input,
+        "NEEDS_ATTENTION",
+        ["USER_PRIORITIZE"],
+        ["You prioritized this conversation."],
+        ["DETERMINING"]
+      );
   }
 }
 
-function assertSupportedMilestone4CInput(
+function assertSupportedLocationEvidence(
   input: PriorityPolicyEvaluatorInput
 ): void {
-  assertSupportedCorrectionEvidence(input.candidate.correction);
-
   const locationState = [
     input.candidate.location.inbox.state,
     input.candidate.location.spam.state,
@@ -107,10 +117,29 @@ function assertSupportedMilestone4CInput(
   }
 }
 
+function evaluateCorrection(
+  input: PriorityPolicyEvaluatorInput
+): EvaluatedOutcome {
+  switch (input.candidate.correction.state) {
+    case "VERIFIED_ABSENT":
+    case "UNKNOWN":
+      return PROVIDER_STAR_EVALUATORS[input.candidate.providerStar.state](
+        input
+      );
+    case "VERIFIED_ACTIVE":
+      switch (input.candidate.correction.kind) {
+        case "PRIORITIZE":
+          return evaluateActivePrioritize(input);
+        case "NOT_IMPORTANT":
+          throw new PriorityPolicyEvaluatorNotImplementedError();
+      }
+  }
+}
+
 export function evaluatePriorityPolicy(
   input: PriorityPolicyEvaluatorInput
 ): PriorityPolicyEvaluationOutcome {
-  assertSupportedMilestone4CInput(input);
+  assertSupportedLocationEvidence(input);
 
-  return PROVIDER_STAR_EVALUATORS[input.candidate.providerStar.state](input);
+  return evaluateCorrection(input);
 }

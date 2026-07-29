@@ -170,20 +170,6 @@ describe("Provider Star constitutional rule", () => {
     }
   });
 
-  it("keeps unimplemented correction paths behind the development-only boundary", () => {
-    const input = fixture({
-      correction: {
-        state: "VERIFIED_ACTIVE",
-        kind: "PRIORITIZE",
-        transitionId: asIdentifier<CorrectionTransitionId>("correction-transition-11")
-      }
-    });
-
-    expect(() => evaluatePriorityPolicy(input)).toThrow(
-      PriorityPolicyEvaluatorNotImplementedError
-    );
-  });
-
   it("keeps unimplemented eligibility paths behind the development-only boundary", () => {
     const input = fixture({
       location: {
@@ -213,6 +199,112 @@ describe("Provider Star constitutional rule", () => {
       evaluatedAt: "2026-07-29T10:00:00.000Z"
     });
     expect(outcome).not.toBeInstanceOf(Error);
+  });
+});
+
+describe("Active Prioritize correction", () => {
+  const correction: CorrectionEvidence = {
+    state: "VERIFIED_ACTIVE",
+    kind: "PRIORITIZE",
+    transitionId: asIdentifier<CorrectionTransitionId>(
+      "correction-transition-11"
+    )
+  };
+
+  it("determines Needs Attention and retains verified Provider Star as ordered supporting evidence", () => {
+    expect(evaluatePriorityPolicy(fixture({ correction }))).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NEEDS_ATTENTION",
+      reasonCodes: ["USER_PRIORITIZE", "PROVIDER_STAR"],
+      reasons: [
+        "You prioritized this conversation.",
+        "Starred in your email provider."
+      ],
+      reasonRoles: ["DETERMINING", "SUPPORTING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+  });
+
+  it("determines Needs Attention without fabricating a reason for absent Provider Star", () => {
+    expect(
+      evaluatePriorityPolicy(
+        fixture({
+          correction,
+          providerStar: { state: "VERIFIED_ABSENT" }
+        })
+      )
+    ).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NEEDS_ATTENTION",
+      reasonCodes: ["USER_PRIORITIZE"],
+      reasons: ["You prioritized this conversation."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+  });
+
+  it("determines Needs Attention while preserving Unknown Provider Star without a star reason", () => {
+    const input = fixture({
+      correction,
+      providerStar: { state: "UNKNOWN" }
+    });
+
+    expect(evaluatePriorityPolicy(input)).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NEEDS_ATTENTION",
+      reasonCodes: ["USER_PRIORITIZE"],
+      reasons: ["You prioritized this conversation."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+    expect(input.candidate.providerStar.state).toBe("UNKNOWN");
+  });
+
+  it("is replay-deterministic and leaves active Prioritize input unchanged", () => {
+    const input = deepFreeze(fixture({ correction }));
+    const before = JSON.stringify(input);
+
+    expect(evaluatePriorityPolicy(input)).toEqual(evaluatePriorityPolicy(input));
+    expect(JSON.stringify(input)).toBe(before);
+  });
+
+  it("reads no clock, randomness, environment, or network state", () => {
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => {
+      throw new Error("The evaluator read the current clock.");
+    });
+    const random = vi.spyOn(Math, "random").mockImplementation(() => {
+      throw new Error("The evaluator generated random state.");
+    });
+    const environment = vi.spyOn(process, "cwd").mockImplementation(() => {
+      throw new Error("The evaluator read process environment state.");
+    });
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => {
+      throw new Error("The evaluator accessed the network.");
+    });
+
+    try {
+      expect(
+        evaluatePriorityPolicy(fixture({ correction }))
+      ).toMatchObject({
+        evaluatedAt: "2026-07-29T10:00:00.000Z",
+        threadId: "30000000-0000-4000-8000-000000000003"
+      });
+      expect(clock).not.toHaveBeenCalled();
+      expect(random).not.toHaveBeenCalled();
+      expect(environment).not.toHaveBeenCalled();
+      expect(network).not.toHaveBeenCalled();
+    } finally {
+      clock.mockRestore();
+      random.mockRestore();
+      environment.mockRestore();
+      network.mockRestore();
+    }
   });
 });
 
@@ -311,7 +403,7 @@ describe("Unknown correction evidence fallback", () => {
   });
 });
 
-describe("Milestone 4C package contract", () => {
+describe("Milestone 4D package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
