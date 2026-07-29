@@ -216,7 +216,102 @@ describe("Provider Star constitutional rule", () => {
   });
 });
 
-describe("Milestone 4B package contract", () => {
+describe("Unknown correction evidence fallback", () => {
+  it("continues verified-present Provider Star evaluation without inventing correction evidence", () => {
+    const input = fixture({ correction: { state: "UNKNOWN" } });
+
+    expect(evaluatePriorityPolicy(input)).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "REVIEW_LATER",
+      reasonCodes: ["PROVIDER_STAR"],
+      reasons: ["Starred in your email provider."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+    expect(input.candidate.correction.state).toBe("UNKNOWN");
+  });
+
+  it("uses the completed default for verified-absent Provider Star without claiming correction absence", () => {
+    const input = fixture({
+      correction: { state: "UNKNOWN" },
+      providerStar: { state: "VERIFIED_ABSENT" }
+    });
+
+    expect(evaluatePriorityPolicy(input)).toEqual(defaultEvaluation);
+    expect(input.candidate.correction.state).toBe("UNKNOWN");
+  });
+
+  it("preserves both correction and Provider Star uncertainty without fabricating reasons", () => {
+    const input = fixture({
+      correction: { state: "UNKNOWN" },
+      providerStar: { state: "UNKNOWN" }
+    });
+    const result = evaluatePriorityPolicy(input);
+
+    expect(result).toEqual(defaultEvaluation);
+    expect(input.candidate.correction.state).toBe("UNKNOWN");
+    expect(input.candidate.providerStar.state).toBe("UNKNOWN");
+    expect("reasonCodes" in result && result.reasonCodes).toEqual([]);
+  });
+
+  it("is replay-deterministic and leaves Unknown correction input unchanged", () => {
+    const input = deepFreeze(fixture({ correction: { state: "UNKNOWN" } }));
+    const before = JSON.stringify(input);
+
+    expect(evaluatePriorityPolicy(input)).toEqual(evaluatePriorityPolicy(input));
+    expect(JSON.stringify(input)).toBe(before);
+  });
+
+  it("reads no clock, randomness, or network state", () => {
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => {
+      throw new Error("The evaluator read the current clock.");
+    });
+    const random = vi.spyOn(Math, "random").mockImplementation(() => {
+      throw new Error("The evaluator generated random state.");
+    });
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => {
+      throw new Error("The evaluator accessed the network.");
+    });
+
+    try {
+      expect(
+        evaluatePriorityPolicy(
+          fixture({ correction: { state: "UNKNOWN" } })
+        )
+      ).toMatchObject({
+        evaluatedAt: "2026-07-29T10:00:00.000Z",
+        threadId: "30000000-0000-4000-8000-000000000003"
+      });
+      expect(clock).not.toHaveBeenCalled();
+      expect(random).not.toHaveBeenCalled();
+      expect(network).not.toHaveBeenCalled();
+    } finally {
+      clock.mockRestore();
+      random.mockRestore();
+      network.mockRestore();
+    }
+  });
+
+  it("keeps active Not Important behind the development-only boundary", () => {
+    const input = fixture({
+      correction: {
+        state: "VERIFIED_ACTIVE",
+        kind: "NOT_IMPORTANT",
+        transitionId: asIdentifier<CorrectionTransitionId>(
+          "correction-transition-12"
+        )
+      }
+    });
+
+    expect(() => evaluatePriorityPolicy(input)).toThrow(
+      PriorityPolicyEvaluatorNotImplementedError
+    );
+  });
+});
+
+describe("Milestone 4C package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",

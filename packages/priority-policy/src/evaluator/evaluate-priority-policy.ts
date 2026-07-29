@@ -6,7 +6,10 @@ import type {
   ReasonCode,
   ReasonRole
 } from "../domain/evaluation.js";
-import type { ProviderStarEvidence } from "../domain/evidence.js";
+import type {
+  CorrectionEvidence,
+  ProviderStarEvidence
+} from "../domain/evidence.js";
 import type { PriorityPolicyEvaluatorInput } from "./contract.js";
 
 export class PriorityPolicyEvaluatorNotImplementedError extends Error {
@@ -74,12 +77,22 @@ const PROVIDER_STAR_EVALUATORS: Readonly<
   UNKNOWN: evaluateProviderStarUnknown
 });
 
-function assertSupportedMilestone4BInput(
+function assertSupportedCorrectionEvidence(
+  correction: CorrectionEvidence
+): void {
+  switch (correction.state) {
+    case "VERIFIED_ABSENT":
+    case "UNKNOWN":
+      return;
+    case "VERIFIED_ACTIVE":
+      throw new PriorityPolicyEvaluatorNotImplementedError();
+  }
+}
+
+function assertSupportedMilestone4CInput(
   input: PriorityPolicyEvaluatorInput
 ): void {
-  if (input.candidate.correction.state !== "VERIFIED_ABSENT") {
-    throw new PriorityPolicyEvaluatorNotImplementedError();
-  }
+  assertSupportedCorrectionEvidence(input.candidate.correction);
 
   const locationState = [
     input.candidate.location.inbox.state,
@@ -97,7 +110,7 @@ function assertSupportedMilestone4BInput(
 export function evaluatePriorityPolicy(
   input: PriorityPolicyEvaluatorInput
 ): PriorityPolicyEvaluationOutcome {
-  assertSupportedMilestone4BInput(input);
+  assertSupportedMilestone4CInput(input);
 
   return PROVIDER_STAR_EVALUATORS[input.candidate.providerStar.state](input);
 }
