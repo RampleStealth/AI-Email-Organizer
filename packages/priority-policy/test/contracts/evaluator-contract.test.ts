@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import * as priorityPolicy from "@aio/priority-policy";
 import {
   evaluatePriorityPolicy,
@@ -8,21 +8,30 @@ import type {
   ApplicationMessageId,
   ApprovedParameterIdentity,
   CanonicalTimestamp,
+  CorrectionEvidence,
   CorrectionTransitionId,
   EvidenceSnapshotId,
   MailboxId,
+  NormalizedLocationEvidence,
   OwnerId,
   PriorityPolicyEvaluationOutcome,
   PriorityPolicyEvaluatorInput,
   ProviderBindingTransitionId,
+  ProviderStarEvidence,
   ThreadId
 } from "@aio/priority-policy";
+
+interface FixtureOptions {
+  readonly providerStar?: ProviderStarEvidence;
+  readonly correction?: CorrectionEvidence;
+  readonly location?: NormalizedLocationEvidence;
+}
 
 function asIdentifier<T extends string>(value: string): T {
   return value as T;
 }
 
-function fixture(): PriorityPolicyEvaluatorInput {
+function fixture(options: FixtureOptions = {}): PriorityPolicyEvaluatorInput {
   return {
     scope: {
       ownerId: asIdentifier<OwnerId>("10000000-0000-4000-8000-000000000001"),
@@ -33,7 +42,7 @@ function fixture(): PriorityPolicyEvaluatorInput {
       providerBinding: {
         transitionId: asIdentifier<ProviderBindingTransitionId>("binding-transition-7")
       },
-      location: {
+      location: options.location ?? {
         inbox: { state: "VERIFIED_PRESENT" },
         spam: { state: "VERIFIED_ABSENT" },
         trash: { state: "VERIFIED_ABSENT" }
@@ -43,12 +52,8 @@ function fixture(): PriorityPolicyEvaluatorInput {
         value: asIdentifier<CanonicalTimestamp>("2026-07-29T09:00:00.000Z"),
         sourceMessageId: asIdentifier<ApplicationMessageId>("40000000-0000-4000-8000-000000000004")
       },
-      providerStar: { state: "UNKNOWN" },
-      correction: {
-        state: "VERIFIED_ACTIVE",
-        kind: "PRIORITIZE",
-        transitionId: asIdentifier<CorrectionTransitionId>("correction-transition-11")
-      }
+      providerStar: options.providerStar ?? { state: "VERIFIED_PRESENT" },
+      correction: options.correction ?? { state: "VERIFIED_ABSENT" }
     },
     context: {
       policyVersion: "1.0",
@@ -62,80 +67,160 @@ function fixture(): PriorityPolicyEvaluatorInput {
   };
 }
 
-function errorSnapshot(input: PriorityPolicyEvaluatorInput) {
-  try {
-    evaluatePriorityPolicy(input);
-  } catch (error) {
-    expect(error).toBeInstanceOf(PriorityPolicyEvaluatorNotImplementedError);
-    const notImplemented = error as PriorityPolicyEvaluatorNotImplementedError;
-    return {
-      name: notImplemented.name,
-      code: notImplemented.code,
-      message: notImplemented.message
-    };
+function deepFreeze<T>(value: T): T {
+  if (value !== null && typeof value === "object") {
+    for (const nested of Object.values(value)) {
+      deepFreeze(nested);
+    }
+    Object.freeze(value);
   }
-  throw new Error("The Milestone 4A skeleton returned a policy result.");
+  return value;
 }
 
-describe("Milestone 4A evaluator contract", () => {
+const defaultEvaluation = {
+  kind: "EVALUATED",
+  threadId: "30000000-0000-4000-8000-000000000003",
+  tier: "NO_IMMEDIATE_SIGNALS",
+  reasonCodes: [],
+  reasons: [],
+  reasonRoles: [],
+  policyVersion: "1.0",
+  evaluatedAt: "2026-07-29T10:00:00.000Z"
+} as const;
+
+describe("Provider Star constitutional rule", () => {
+  it("returns the canonical evaluated result for verified-present Provider Star", () => {
+    expect(evaluatePriorityPolicy(fixture())).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "REVIEW_LATER",
+      reasonCodes: ["PROVIDER_STAR"],
+      reasons: ["Starred in your email provider."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+  });
+
+  it("does not fabricate Provider Star behavior for verified absence", () => {
+    const result = evaluatePriorityPolicy(
+      fixture({ providerStar: { state: "VERIFIED_ABSENT" } })
+    );
+
+    expect(result).toEqual(defaultEvaluation);
+    expect(result.kind).toBe("EVALUATED");
+    expect("reasonCodes" in result && result.reasonCodes).not.toContain("PROVIDER_STAR");
+  });
+
+  it("preserves Unknown evidence without treating it as present or absent", () => {
+    const input = fixture({ providerStar: { state: "UNKNOWN" } });
+    const result = evaluatePriorityPolicy(input);
+
+    expect(input.candidate.providerStar.state).toBe("UNKNOWN");
+    expect(result).toEqual(defaultEvaluation);
+    expect("reasonCodes" in result && result.reasonCodes).not.toContain("PROVIDER_STAR");
+  });
+
+  it("returns the complete Attention Contract fields with aligned canonical reasons", () => {
+    const result = evaluatePriorityPolicy(fixture());
+
+    expect(Object.keys(result).sort()).toEqual([
+      "evaluatedAt",
+      "kind",
+      "policyVersion",
+      "reasonCodes",
+      "reasonRoles",
+      "reasons",
+      "threadId",
+      "tier"
+    ]);
+    expect(result).toMatchObject({
+      reasonCodes: ["PROVIDER_STAR"],
+      reasons: ["Starred in your email provider."],
+      reasonRoles: ["DETERMINING"]
+    });
+  });
+
+  it("is structurally deterministic and does not mutate input", () => {
+    const input = deepFreeze(fixture());
+    const before = JSON.stringify(input);
+
+    expect(evaluatePriorityPolicy(input)).toEqual(evaluatePriorityPolicy(input));
+    expect(JSON.stringify(input)).toBe(before);
+  });
+
+  it("does not read the current clock or generate random state", () => {
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => {
+      throw new Error("The evaluator read the current clock.");
+    });
+    const random = vi.spyOn(Math, "random").mockImplementation(() => {
+      throw new Error("The evaluator generated random state.");
+    });
+
+    try {
+      expect(evaluatePriorityPolicy(fixture())).toMatchObject({
+        evaluatedAt: "2026-07-29T10:00:00.000Z",
+        threadId: "30000000-0000-4000-8000-000000000003"
+      });
+      expect(clock).not.toHaveBeenCalled();
+      expect(random).not.toHaveBeenCalled();
+    } finally {
+      clock.mockRestore();
+      random.mockRestore();
+    }
+  });
+
+  it("keeps unimplemented correction paths behind the development-only boundary", () => {
+    const input = fixture({
+      correction: {
+        state: "VERIFIED_ACTIVE",
+        kind: "PRIORITIZE",
+        transitionId: asIdentifier<CorrectionTransitionId>("correction-transition-11")
+      }
+    });
+
+    expect(() => evaluatePriorityPolicy(input)).toThrow(
+      PriorityPolicyEvaluatorNotImplementedError
+    );
+  });
+
+  it("keeps unimplemented eligibility paths behind the development-only boundary", () => {
+    const input = fixture({
+      location: {
+        inbox: { state: "VERIFIED_ABSENT" },
+        spam: { state: "VERIFIED_ABSENT" },
+        trash: { state: "VERIFIED_ABSENT" }
+      }
+    });
+
+    expect(() => evaluatePriorityPolicy(input)).toThrow(
+      PriorityPolicyEvaluatorNotImplementedError
+    );
+  });
+
+  it("keeps constitutional Unknown distinct from an unsupported development path", () => {
+    const outcome: PriorityPolicyEvaluationOutcome = {
+      kind: "UNKNOWN",
+      threadId: asIdentifier<ThreadId>("30000000-0000-4000-8000-000000000003"),
+      policyVersion: "1.0",
+      evaluatedAt: asIdentifier<CanonicalTimestamp>("2026-07-29T10:00:00.000Z")
+    };
+
+    expect(outcome).toEqual({
+      kind: "UNKNOWN",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+    expect(outcome).not.toBeInstanceOf(Error);
+  });
+});
+
+describe("Milestone 4B package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
       "evaluatePriorityPolicy"
     ]);
-  });
-
-  it("accepts the immutable boundary shape without returning a fake tier", () => {
-    const input = fixture();
-
-    expect(() => evaluatePriorityPolicy(input)).toThrow(
-      PriorityPolicyEvaluatorNotImplementedError
-    );
-    expect(input.context.evaluatedAt).toBe("2026-07-29T10:00:00.000Z");
-    expect(input.context.policyVersion).toBe("1.0");
-    expect(input.context.parameters.futureSkewTolerance).toBe("PT5M");
-  });
-
-  it("models a normal Unknown outcome as data rather than an exception", () => {
-    const input = fixture();
-    const outcome: PriorityPolicyEvaluationOutcome = {
-      kind: "UNKNOWN",
-      threadId: input.candidate.threadId,
-      policyVersion: input.context.policyVersion,
-      evaluatedAt: input.context.evaluatedAt
-    };
-
-    expect(outcome).not.toBeInstanceOf(Error);
-    expect(outcome.kind).toBe("UNKNOWN");
-    expect("tier" in outcome).toBe(false);
-    expect("reasonCodes" in outcome).toBe(false);
-  });
-
-  it("has identical skeleton behavior for identical replay input", () => {
-    const input = fixture();
-    const before = JSON.stringify(input);
-
-    expect(errorSnapshot(input)).toEqual(errorSnapshot(input));
-    expect(JSON.stringify(input)).toBe(before);
-  });
-
-  it("requires replay-relevant values to be supplied by the caller", () => {
-    const input = fixture();
-
-    expect(input).toMatchObject({
-      candidate: {
-        threadId: "30000000-0000-4000-8000-000000000003",
-        providerBinding: { transitionId: "binding-transition-7" },
-        candidateTimestamp: {
-          sourceMessageId: "40000000-0000-4000-8000-000000000004"
-        },
-        correction: { transitionId: "correction-transition-11" }
-      },
-      context: {
-        evaluatedAt: "2026-07-29T10:00:00.000Z",
-        evidenceSnapshotId: "evidence-snapshot-13",
-        parameters: { identity: "ppv1-parameters-1" }
-      }
-    });
   });
 });
