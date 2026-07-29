@@ -34,6 +34,7 @@ export type {
   PriorityPolicyEvaluator,
   PriorityPolicyEvaluatorInput
 } from "./evaluator/contract.js";
+export { isPriorityPolicyCandidateEligible } from "./evaluator/candidate-eligibility.js";
 export {
   evaluatePriorityPolicy,
   PriorityPolicyEvaluatorNotImplementedError

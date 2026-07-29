@@ -16,6 +16,12 @@ export interface NormalizedLocationEvidence {
   readonly trash: VerifiedMembership;
 }
 
+export interface EligibleLocationEvidence {
+  readonly inbox: { readonly state: "VERIFIED_PRESENT" };
+  readonly spam: { readonly state: "VERIFIED_ABSENT" };
+  readonly trash: { readonly state: "VERIFIED_ABSENT" };
+}
+
 export type CandidateTimestampEvidence =
   | {
       readonly state: "VERIFIED";

@@ -1,7 +1,7 @@
 import type {
   CandidateTimestampEvidence,
   CorrectionEvidence,
-  NormalizedLocationEvidence,
+  EligibleLocationEvidence,
   ProviderBindingContext,
   ProviderStarEvidence
 } from "../domain/evidence.js";
@@ -25,7 +25,7 @@ export interface PriorityPolicyEvaluatorInput {
   readonly candidate: {
     readonly threadId: ThreadId;
     readonly providerBinding: ProviderBindingContext;
-    readonly location: NormalizedLocationEvidence;
+    readonly location: EligibleLocationEvidence;
     readonly candidateTimestamp: CandidateTimestampEvidence;
     readonly providerStar: ProviderStarEvidence;
     readonly correction: CorrectionEvidence;

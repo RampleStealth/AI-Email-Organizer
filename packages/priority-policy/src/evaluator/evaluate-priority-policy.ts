@@ -7,6 +7,7 @@ import type {
   ReasonRole
 } from "../domain/evaluation.js";
 import type { ProviderStarEvidence } from "../domain/evidence.js";
+import { isPriorityPolicyCandidateEligible } from "./candidate-eligibility.js";
 import type { PriorityPolicyEvaluatorInput } from "./contract.js";
 
 export class PriorityPolicyEvaluatorNotImplementedError extends Error {
@@ -128,22 +129,6 @@ function evaluateActiveNotImportant(
   }
 }
 
-function assertSupportedLocationEvidence(
-  input: PriorityPolicyEvaluatorInput
-): void {
-  const locationState = [
-    input.candidate.location.inbox.state,
-    input.candidate.location.spam.state,
-    input.candidate.location.trash.state
-  ].join("|");
-
-  if (
-    locationState !== "VERIFIED_PRESENT|VERIFIED_ABSENT|VERIFIED_ABSENT"
-  ) {
-    throw new PriorityPolicyEvaluatorNotImplementedError();
-  }
-}
-
 function evaluateCorrection(
   input: PriorityPolicyEvaluatorInput
 ): EvaluatedOutcome {
@@ -166,7 +151,11 @@ function evaluateCorrection(
 export function evaluatePriorityPolicy(
   input: PriorityPolicyEvaluatorInput
 ): PriorityPolicyEvaluationOutcome {
-  assertSupportedLocationEvidence(input);
+  if (!isPriorityPolicyCandidateEligible(input.candidate.location)) {
+    throw new TypeError(
+      "Priority Policy evaluation requires an admitted candidate."
+    );
+  }
 
   return evaluateCorrection(input);
 }

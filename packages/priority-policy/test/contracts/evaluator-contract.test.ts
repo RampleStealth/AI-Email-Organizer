@@ -12,7 +12,6 @@ import type {
   CorrectionTransitionId,
   EvidenceSnapshotId,
   MailboxId,
-  NormalizedLocationEvidence,
   OwnerId,
   PriorityPolicyEvaluationOutcome,
   PriorityPolicyEvaluatorInput,
@@ -21,10 +20,13 @@ import type {
   ThreadId
 } from "@aio/priority-policy";
 
+type AdmittedLocationFixture =
+  PriorityPolicyEvaluatorInput["candidate"]["location"];
+
 interface FixtureOptions {
   readonly providerStar?: ProviderStarEvidence;
   readonly correction?: CorrectionEvidence;
-  readonly location?: NormalizedLocationEvidence;
+  readonly location?: AdmittedLocationFixture;
 }
 
 function asIdentifier<T extends string>(value: string): T {
@@ -170,18 +172,15 @@ describe("Provider Star constitutional rule", () => {
     }
   });
 
-  it("keeps unimplemented eligibility paths behind the development-only boundary", () => {
-    const input = fixture({
-      location: {
-        inbox: { state: "VERIFIED_ABSENT" },
-        spam: { state: "VERIFIED_ABSENT" },
-        trash: { state: "VERIFIED_ABSENT" }
-      }
-    });
+  it("keeps development-time incompleteness distinct from constitutional outcomes", () => {
+    const error = new PriorityPolicyEvaluatorNotImplementedError();
 
-    expect(() => evaluatePriorityPolicy(input)).toThrow(
-      PriorityPolicyEvaluatorNotImplementedError
-    );
+    expect(error).toMatchObject({
+      name: "PriorityPolicyEvaluatorNotImplementedError",
+      code: "PRIORITY_POLICY_EVALUATOR_NOT_IMPLEMENTED",
+      message: "Priority Policy evaluation is not implemented for this input."
+    });
+    expect(error).toBeInstanceOf(Error);
   });
 
   it("keeps constitutional Unknown distinct from an unsupported development path", () => {
@@ -498,7 +497,8 @@ describe("Milestone 4E package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
-      "evaluatePriorityPolicy"
+      "evaluatePriorityPolicy",
+      "isPriorityPolicyCandidateEligible"
     ]);
   });
 });
