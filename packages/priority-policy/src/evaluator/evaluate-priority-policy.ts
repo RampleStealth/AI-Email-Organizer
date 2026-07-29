@@ -101,6 +101,33 @@ function evaluateActivePrioritize(
   }
 }
 
+function evaluateActiveNotImportant(
+  input: PriorityPolicyEvaluatorInput
+): EvaluatedOutcome {
+  switch (input.candidate.providerStar.state) {
+    case "VERIFIED_PRESENT":
+      return createEvaluatedOutcome(
+        input,
+        "NO_IMMEDIATE_SIGNALS",
+        ["USER_NOT_IMPORTANT", "PROVIDER_STAR"],
+        [
+          "You marked this conversation as not important.",
+          "Starred in your email provider."
+        ],
+        ["DETERMINING", "SUPPORTING"]
+      );
+    case "VERIFIED_ABSENT":
+    case "UNKNOWN":
+      return createEvaluatedOutcome(
+        input,
+        "NO_IMMEDIATE_SIGNALS",
+        ["USER_NOT_IMPORTANT"],
+        ["You marked this conversation as not important."],
+        ["DETERMINING"]
+      );
+  }
+}
+
 function assertSupportedLocationEvidence(
   input: PriorityPolicyEvaluatorInput
 ): void {
@@ -131,7 +158,7 @@ function evaluateCorrection(
         case "PRIORITIZE":
           return evaluateActivePrioritize(input);
         case "NOT_IMPORTANT":
-          throw new PriorityPolicyEvaluatorNotImplementedError();
+          return evaluateActiveNotImportant(input);
       }
   }
 }

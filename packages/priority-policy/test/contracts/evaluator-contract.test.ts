@@ -386,24 +386,115 @@ describe("Unknown correction evidence fallback", () => {
     }
   });
 
-  it("keeps active Not Important behind the development-only boundary", () => {
+});
+
+describe("Active Not Important correction", () => {
+  const correction: CorrectionEvidence = {
+    state: "VERIFIED_ACTIVE",
+    kind: "NOT_IMPORTANT",
+    transitionId: asIdentifier<CorrectionTransitionId>(
+      "correction-transition-12"
+    )
+  };
+
+  it("determines No Immediate Signals and retains verified Provider Star as ordered supporting evidence", () => {
+    expect(evaluatePriorityPolicy(fixture({ correction }))).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NO_IMMEDIATE_SIGNALS",
+      reasonCodes: ["USER_NOT_IMPORTANT", "PROVIDER_STAR"],
+      reasons: [
+        "You marked this conversation as not important.",
+        "Starred in your email provider."
+      ],
+      reasonRoles: ["DETERMINING", "SUPPORTING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+  });
+
+  it("determines No Immediate Signals without fabricating a reason for absent Provider Star", () => {
+    expect(
+      evaluatePriorityPolicy(
+        fixture({
+          correction,
+          providerStar: { state: "VERIFIED_ABSENT" }
+        })
+      )
+    ).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NO_IMMEDIATE_SIGNALS",
+      reasonCodes: ["USER_NOT_IMPORTANT"],
+      reasons: ["You marked this conversation as not important."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+  });
+
+  it("determines No Immediate Signals while preserving Unknown Provider Star without a star reason", () => {
     const input = fixture({
-      correction: {
-        state: "VERIFIED_ACTIVE",
-        kind: "NOT_IMPORTANT",
-        transitionId: asIdentifier<CorrectionTransitionId>(
-          "correction-transition-12"
-        )
-      }
+      correction,
+      providerStar: { state: "UNKNOWN" }
     });
 
-    expect(() => evaluatePriorityPolicy(input)).toThrow(
-      PriorityPolicyEvaluatorNotImplementedError
-    );
+    expect(evaluatePriorityPolicy(input)).toEqual({
+      kind: "EVALUATED",
+      threadId: "30000000-0000-4000-8000-000000000003",
+      tier: "NO_IMMEDIATE_SIGNALS",
+      reasonCodes: ["USER_NOT_IMPORTANT"],
+      reasons: ["You marked this conversation as not important."],
+      reasonRoles: ["DETERMINING"],
+      policyVersion: "1.0",
+      evaluatedAt: "2026-07-29T10:00:00.000Z"
+    });
+    expect(input.candidate.providerStar.state).toBe("UNKNOWN");
+  });
+
+  it("is replay-deterministic and leaves active Not Important input unchanged", () => {
+    const input = deepFreeze(fixture({ correction }));
+    const before = JSON.stringify(input);
+
+    expect(evaluatePriorityPolicy(input)).toEqual(evaluatePriorityPolicy(input));
+    expect(JSON.stringify(input)).toBe(before);
+  });
+
+  it("reads no clock, randomness, environment, or network state", () => {
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => {
+      throw new Error("The evaluator read the current clock.");
+    });
+    const random = vi.spyOn(Math, "random").mockImplementation(() => {
+      throw new Error("The evaluator generated random state.");
+    });
+    const environment = vi.spyOn(process, "cwd").mockImplementation(() => {
+      throw new Error("The evaluator read process environment state.");
+    });
+    const network = vi.spyOn(globalThis, "fetch").mockImplementation(() => {
+      throw new Error("The evaluator accessed the network.");
+    });
+
+    try {
+      expect(
+        evaluatePriorityPolicy(fixture({ correction }))
+      ).toMatchObject({
+        evaluatedAt: "2026-07-29T10:00:00.000Z",
+        threadId: "30000000-0000-4000-8000-000000000003"
+      });
+      expect(clock).not.toHaveBeenCalled();
+      expect(random).not.toHaveBeenCalled();
+      expect(environment).not.toHaveBeenCalled();
+      expect(network).not.toHaveBeenCalled();
+    } finally {
+      clock.mockRestore();
+      random.mockRestore();
+      environment.mockRestore();
+      network.mockRestore();
+    }
   });
 });
 
-describe("Milestone 4D package contract", () => {
+describe("Milestone 4E package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
