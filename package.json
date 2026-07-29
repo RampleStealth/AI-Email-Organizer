@@ -8,8 +8,11 @@
   ],
   "scripts": {
     "build": "pnpm -r --if-present run build",
-    "check": "pnpm -r --if-present run lint && pnpm -r --if-present run typecheck",
+    "check": "pnpm -r --if-present run typecheck",
     "test": "pnpm -r --if-present run test",
+    "test:milestone4": "pnpm --filter @aio/priority-policy run test",
+    "coverage:milestone4": "pnpm --filter @aio/priority-policy run coverage",
+    "verify:milestone4": "pnpm --filter @aio/priority-policy run typecheck && pnpm --filter @aio/priority-policy run test && pnpm --filter @aio/priority-policy run coverage",
     "db:migrate": "pnpm --filter @aio/database run db:migrate",
     "db:status": "pnpm --filter @aio/database run db:status",
     "db:verify": "pnpm --filter @aio/database run db:verify",

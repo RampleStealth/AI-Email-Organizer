@@ -11,6 +11,22 @@ permissions:
   contents: read
 
 jobs:
+  milestone4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.1
+      - name: Enable pinned pnpm
+        run: corepack enable
+      - name: Verify package manager
+        run: pnpm --version
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: Verify Milestone 4 pure domain
+        run: pnpm verify:milestone4
+
   validate:
     runs-on: ubuntu-latest
     services:
