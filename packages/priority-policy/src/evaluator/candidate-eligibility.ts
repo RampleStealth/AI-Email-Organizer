@@ -3,12 +3,25 @@ import type {
   NormalizedLocationEvidence
 } from "../domain/evidence.js";
 
+interface RuntimeMembershipEvidence {
+  readonly state?: unknown;
+}
+
+interface RuntimeLocationEvidence {
+  readonly inbox?: RuntimeMembershipEvidence | null;
+  readonly spam?: RuntimeMembershipEvidence | null;
+  readonly trash?: RuntimeMembershipEvidence | null;
+}
+
 export function isPriorityPolicyCandidateEligible(
   location: NormalizedLocationEvidence
 ): location is EligibleLocationEvidence {
+  const runtimeLocation =
+    location as RuntimeLocationEvidence | null | undefined;
+
   return (
-    location.inbox.state === "VERIFIED_PRESENT" &&
-    location.spam.state === "VERIFIED_ABSENT" &&
-    location.trash.state === "VERIFIED_ABSENT"
+    runtimeLocation?.inbox?.state === "VERIFIED_PRESENT" &&
+    runtimeLocation.spam?.state === "VERIFIED_ABSENT" &&
+    runtimeLocation.trash?.state === "VERIFIED_ABSENT"
   );
 }

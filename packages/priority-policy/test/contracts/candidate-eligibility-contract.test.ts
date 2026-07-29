@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it, vi } from "vitest";
 import {
   evaluatePriorityPolicy,
   isPriorityPolicyCandidateEligible
@@ -26,6 +26,49 @@ const membershipStates = [
   "VERIFIED_ABSENT",
   "UNKNOWN"
 ] as const satisfies readonly MembershipState[];
+
+const malformedLocationEvidence = [
+  ["undefined location", undefined],
+  ["null location", null],
+  ["missing memberships", {}],
+  [
+    "missing Inbox membership",
+    {
+      spam: { state: "VERIFIED_ABSENT" },
+      trash: { state: "VERIFIED_ABSENT" }
+    }
+  ],
+  [
+    "missing Spam membership",
+    {
+      inbox: { state: "VERIFIED_PRESENT" },
+      trash: { state: "VERIFIED_ABSENT" }
+    }
+  ],
+  [
+    "missing Trash membership",
+    {
+      inbox: { state: "VERIFIED_PRESENT" },
+      spam: { state: "VERIFIED_ABSENT" }
+    }
+  ],
+  [
+    "unknown membership enum",
+    {
+      inbox: { state: "INVALID" },
+      spam: { state: "VERIFIED_ABSENT" },
+      trash: { state: "VERIFIED_ABSENT" }
+    }
+  ],
+  [
+    "null membership",
+    {
+      inbox: null,
+      spam: { state: "VERIFIED_ABSENT" },
+      trash: { state: "VERIFIED_ABSENT" }
+    }
+  ]
+] as const;
 
 const eligibilityCases: readonly EligibilityCase[] =
   membershipStates.flatMap((inbox) =>
@@ -177,5 +220,52 @@ describe("Priority Policy candidate eligibility", () => {
         "Priority Policy evaluation requires an admitted candidate."
       )
     );
+  });
+
+  it.each(malformedLocationEvidence)(
+    "rejects %s without throwing from the public predicate",
+    (_label, malformedLocation) => {
+      const location =
+        malformedLocation as unknown as NormalizedLocationEvidence;
+
+      expect(() => isPriorityPolicyCandidateEligible(location)).not.toThrow();
+      expect(isPriorityPolicyCandidateEligible(location)).toBe(false);
+    }
+  );
+
+  it.each(malformedLocationEvidence)(
+    "rejects %s through the stable evaluator programming error",
+    (_label, malformedLocation) => {
+      const input = evaluatorInput({
+        inbox: { state: "VERIFIED_PRESENT" },
+        spam: { state: "VERIFIED_ABSENT" },
+        trash: { state: "VERIFIED_ABSENT" }
+      });
+      const invalidInput = {
+        ...input,
+        candidate: {
+          ...input.candidate,
+          location: malformedLocation
+        }
+      } as unknown as PriorityPolicyEvaluatorInput;
+
+      expect(() => evaluatePriorityPolicy(invalidInput)).toThrow(
+        new TypeError(
+          "Priority Policy evaluation requires an admitted candidate."
+        )
+      );
+    }
+  );
+
+  it("narrows normalized evidence to the evaluator location contract", () => {
+    const location: NormalizedLocationEvidence = {
+      inbox: { state: "VERIFIED_PRESENT" },
+      spam: { state: "VERIFIED_ABSENT" },
+      trash: { state: "VERIFIED_ABSENT" }
+    };
+
+    if (isPriorityPolicyCandidateEligible(location)) {
+      expectTypeOf(location).toEqualTypeOf<AdmittedLocationFixture>();
+    }
   });
 });
