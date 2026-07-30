@@ -498,6 +498,7 @@ describe("Milestone 4E package contract", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
       "admitPriorityPolicyCandidates",
+      "createPriorityPolicyCollectionEvaluation",
       "evaluatePriorityPolicy",
       "isPriorityPolicyCandidateEligible",
       "orderPriorityPolicyCandidates"

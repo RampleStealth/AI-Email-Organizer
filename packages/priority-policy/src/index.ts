@@ -5,6 +5,18 @@ export type {
 } from "./admission/contract.js";
 export { admitPriorityPolicyCandidates } from "./admission/admit-priority-policy-candidates.js";
 export type {
+  PriorityPolicyCandidateScope,
+  PriorityPolicyCollectionDelivery,
+  PriorityPolicyCollectionDeliveryInput,
+  PriorityPolicyCollectionEvaluation,
+  PriorityPolicyCollectionEvaluationInput,
+  PriorityPolicyEvidenceCompleteness,
+  PriorityPolicyIncompleteEvidence,
+  PriorityPolicyIncompleteEvidenceKind,
+  PriorityPolicySynchronizationCoverage
+} from "./collection/contract.js";
+export { createPriorityPolicyCollectionEvaluation } from "./collection/create-priority-policy-collection-evaluation.js";
+export type {
   CandidateEvaluation,
   CanonicalReason,
   EvaluatedOutcome,
