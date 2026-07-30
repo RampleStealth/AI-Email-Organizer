@@ -499,7 +499,8 @@ describe("Milestone 4E package contract", () => {
       "PriorityPolicyEvaluatorNotImplementedError",
       "admitPriorityPolicyCandidates",
       "evaluatePriorityPolicy",
-      "isPriorityPolicyCandidateEligible"
+      "isPriorityPolicyCandidateEligible",
+      "orderPriorityPolicyCandidates"
     ]);
   });
 });

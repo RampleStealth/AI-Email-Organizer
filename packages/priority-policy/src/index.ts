@@ -45,3 +45,10 @@ export {
   evaluatePriorityPolicy,
   PriorityPolicyEvaluatorNotImplementedError
 } from "./evaluator/evaluate-priority-policy.js";
+export type {
+  PriorityPolicyCollectionOrdering,
+  PriorityPolicyCollectionOrderingInput,
+  PriorityPolicyOrderedEvaluatedCandidate,
+  PriorityPolicyScopedEvaluation
+} from "./ordering/contract.js";
+export { orderPriorityPolicyCandidates } from "./ordering/order-priority-policy-candidates.js";

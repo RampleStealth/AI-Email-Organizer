@@ -1,4 +1,5 @@
 import type { CandidateTimestampEvidence } from "../domain/evidence.js";
+import type { PriorityTier } from "../domain/evaluation.js";
 import type { ThreadId } from "../domain/identifiers.js";
 
 const FUTURE_SKEW_TOLERANCE_MILLISECONDS = 5 * 60 * 1000;
@@ -92,4 +93,34 @@ export function compareThreadIds(left: ThreadId, right: ThreadId): number {
   }
 
   return leftBytes[15]! - rightBytes[15]!;
+}
+
+export function comparePriorityTiers(
+  left: PriorityTier,
+  right: PriorityTier
+): number {
+  if (
+    (left !== "NEEDS_ATTENTION" &&
+      left !== "REVIEW_LATER" &&
+      left !== "NO_IMMEDIATE_SIGNALS") ||
+    (right !== "NEEDS_ATTENTION" &&
+      right !== "REVIEW_LATER" &&
+      right !== "NO_IMMEDIATE_SIGNALS")
+  ) {
+    return invalidInput();
+  }
+
+  if (left === right) {
+    return 0;
+  }
+
+  if (left === "NEEDS_ATTENTION") {
+    return -1;
+  }
+
+  if (right === "NEEDS_ATTENTION") {
+    return 1;
+  }
+
+  return left === "REVIEW_LATER" ? -1 : 1;
 }
