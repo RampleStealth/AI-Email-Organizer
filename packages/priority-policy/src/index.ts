@@ -1,4 +1,10 @@
 export type {
+  PriorityPolicyAdmissionCandidate,
+  PriorityPolicyCandidateAdmission,
+  PriorityPolicyCandidateAdmissionInput
+} from "./admission/contract.js";
+export { admitPriorityPolicyCandidates } from "./admission/admit-priority-policy-candidates.js";
+export type {
   CandidateEvaluation,
   CanonicalReason,
   EvaluatedOutcome,

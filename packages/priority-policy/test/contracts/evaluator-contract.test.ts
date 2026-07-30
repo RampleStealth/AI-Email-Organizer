@@ -497,6 +497,7 @@ describe("Milestone 4E package contract", () => {
   it("exposes only the deliberate runtime package surface", () => {
     expect(Object.keys(priorityPolicy).sort()).toEqual([
       "PriorityPolicyEvaluatorNotImplementedError",
+      "admitPriorityPolicyCandidates",
       "evaluatePriorityPolicy",
       "isPriorityPolicyCandidateEligible"
     ]);
