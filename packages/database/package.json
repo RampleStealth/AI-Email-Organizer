@@ -12,12 +12,15 @@
     "./repositories/provider-command": "./src/repositories/provider-command.ts",
     "./repositories/draft": "./src/repositories/draft-repository.ts",
     "./repositories/worker-runtime": "./src/repositories/worker-runtime-repository.ts",
+    "./repositories/thread-provider-binding": "./src/repositories/thread-provider-binding-repository.ts",
     "./migrations": "./src/migrations.ts"
   },
   "scripts": {
     "db:migrate": "tsx src/migrate.ts",
     "db:status": "tsx src/migration-status.ts",
-    "db:verify": "tsx src/migration-verify.ts"
+    "db:verify": "tsx src/migration-verify.ts",
+    "test": "tsx --test --test-concurrency=1 test/*.test.ts",
+    "test:provider-binding": "tsx --test --test-concurrency=1 test/provider-locator.test.ts test/provider-binding-migration.integration.test.ts test/provider-binding-repository.integration.test.ts"
   },
   "dependencies": {
     "@aio/contracts": "workspace:*", "@aio/security": "workspace:*",
