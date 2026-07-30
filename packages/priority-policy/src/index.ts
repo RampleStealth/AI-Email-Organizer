@@ -64,3 +64,9 @@ export type {
   PriorityPolicyScopedEvaluation
 } from "./ordering/contract.js";
 export { orderPriorityPolicyCandidates } from "./ordering/order-priority-policy-candidates.js";
+export type {
+  PriorityPolicyReplayFixture,
+  PriorityPolicyReplayInputSnapshot,
+  PriorityPolicyReplayVerificationResult
+} from "./replay/contract.js";
+export { verifyPriorityPolicyReplay } from "./replay/verify-priority-policy-replay.js";
