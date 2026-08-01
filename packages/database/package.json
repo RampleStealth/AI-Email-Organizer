@@ -13,6 +13,7 @@
     "./repositories/draft": "./src/repositories/draft-repository.ts",
     "./repositories/worker-runtime": "./src/repositories/worker-runtime-repository.ts",
     "./repositories/thread-provider-binding": "./src/repositories/thread-provider-binding-repository.ts",
+    "./repositories/priority-correction": "./src/repositories/priority-correction-repository.ts",
     "./migrations": "./src/migrations.ts"
   },
   "scripts": {
@@ -20,7 +21,8 @@
     "db:status": "tsx src/migration-status.ts",
     "db:verify": "tsx src/migration-verify.ts",
     "test": "tsx --test --test-concurrency=1 test/*.test.ts",
-    "test:provider-binding": "tsx --test --test-concurrency=1 test/provider-locator.test.ts test/provider-binding-migration.integration.test.ts test/provider-binding-repository.integration.test.ts"
+    "test:provider-binding": "tsx --test --test-concurrency=1 test/provider-locator.test.ts test/provider-binding-migration.integration.test.ts test/provider-binding-repository.integration.test.ts",
+    "test:priority-correction": "tsx --test --test-concurrency=1 test/priority-correction-migration.integration.test.ts test/priority-correction-repository.integration.test.ts"
   },
   "dependencies": {
     "@aio/contracts": "workspace:*", "@aio/security": "workspace:*",
